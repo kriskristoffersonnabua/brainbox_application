@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="235px" height="53px" viewBox="0 0 235 53" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Login-Page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" transform="translate(-66.000000, -55.000000)">
+        <g id="Group" transform="translate(66.000000, 46.000000)">
+            <text id="BRAINBOX" font-family="RobotoMono-Regular, Roboto Mono" font-size="36" font-weight="normal" fill="#E66464">
+                <tspan x="63.5859375" y="38">BRAINBOX</tspan>
+            </text>
+            <text id="Tutorial-and-Review" font-family="RobotoMono-Regular, Roboto Mono" font-size="11" font-weight="normal" fill="#3A3A3A">
+                <tspan x="63.1860352" y="60">Tutorial and Review Center</tspan>
+            </text>
+            <circle id="Oval-Copy-10" fill="#E66464" transform="translate(26.500000, 35.500000) scale(1, -1) rotate(90.000000) translate(-26.500000, -35.500000) " cx="26.5" cy="35.5" r="26.5"></circle>
+        </g>
+    </g>
+</svg>
