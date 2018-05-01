@@ -23,9 +23,9 @@ class Login extends React.Component {
           style={styles.imageStyle}
           source={require('../assets/images/BrainboxTitle.png')}
         />
-        <TextField title="Email" onChange={() => {}} />
-        <TextField title="Password" onChange={() => {}} />
-        <Button type="confirm" text="Login" />
+        <TextField title="Email" onChangeText={email => this.setState({email})} />
+        <TextField title="Password" onChangeText={password => this.setState({password})} />
+        <Button type="confirm" text="Login" onPress={this.login}/>
         <Text style={styles.orStyle}>or</Text>
         <Button type="facebook" text="Facebook" />
         <Button type="google" text="Google" />
@@ -38,6 +38,16 @@ class Login extends React.Component {
         </TouchableOpacity>
       </View>
     );
+  }
+  login = () => {
+    let data = this.state;
+    console.log(data);
+    try {
+      this.props.loginUser(data);
+    }
+    catch(exception){
+      console.log(exception);
+    }
   }
 }
 

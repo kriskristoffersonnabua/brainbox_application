@@ -11,6 +11,7 @@ const {
   signoutUser,
   goToSignupPage,
   goToLoginPage,
+  authenticateUser,
 } = Actions;
 
 class Home extends React.Component {
@@ -30,7 +31,10 @@ class Home extends React.Component {
             loginpage={this.props.goToLoginPage}
           />
         ) : this.props.landingPage == 'Login' ? (
-          <Login signuppage={this.props.goToSignupPage}/>
+          <Login
+            signuppage={this.props.goToSignupPage}
+            loginUser={this.props.authenticateUser}
+          />
         ) : (
           <Signup
             signup={this.props.signupUserAction}
@@ -44,9 +48,13 @@ class Home extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    authToken: state.loggedInUser.authToken || state.loggedInUser.authToken || state.signupUserAction.authTOken,
-    landingPage: state.goToLoginPage.landingPage || state.goToSignupPage.landingPage
-  }
+    authToken:
+      state.loggedInUser.authToken ||
+      state.loggedInUser.authToken ||
+      state.signupUserAction.authTOken,
+    landingPage:
+      state.goToLoginPage.landingPage || state.goToSignupPage.landingPage,
+  };
 };
 
 export default connect(mapStateToProps, {
@@ -55,4 +63,5 @@ export default connect(mapStateToProps, {
   goToLoginPage,
   signoutUser,
   signupUserAction,
+  authenticateUser,
 })(Home);

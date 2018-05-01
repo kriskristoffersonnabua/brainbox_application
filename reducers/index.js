@@ -6,7 +6,8 @@ import AppNavigationReducer from './appNavigationReducer';
 export default combineReducers({
   loggedInUser: UserReducer,
   signupUserAction: UserReducer,
+  authenticateUser: UserReducer,
   signoutUser: UserReducer,
   goToSignupPage: AppNavigationReducer,
-  goToLoginPage: AppNavigationReducer
+  goToLoginPage: AppNavigationReducer,
 });

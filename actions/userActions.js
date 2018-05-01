@@ -1,6 +1,6 @@
 import * as types from './types';
 import {AsyncStorage, Alert} from 'react-native';
-import {signupUser} from '../lib/api';
+import {signupUser, loginUser} from '../lib/api';
 
 export const loggedInUser = () => {
   return dispatch => {
@@ -15,12 +15,13 @@ export const loggedInUser = () => {
 
 export const signupUserAction = body => {
   return async dispatch => {
-    const authToken = await signupUser(body);
+    const response = await signupUser(body);
     //if authtoken is not null dispatch
-    await AsyncStorage.setItem('bboxAuthToken', authToken);
+    await AsyncStorage.setItem('bboxAuthToken', response.authToken);
+    await AsyncStorage.setItem('bboxUserId', response.userId);
     dispatch({
       type: types.LOGGED_IN_USER,
-      payload: authToken,
+      payload: response.authToken,
     });
   };
 };
@@ -33,5 +34,23 @@ export const signoutUser = () => {
       type: types.LOGGED_IN_USER,
       payload: authToken,
     });
+  };
+};
+
+export const authenticateUser = body => {
+  return async dispatch => {
+    const response = await loginUser(body);
+    //if authtoken is not null dispatch
+    if (response.error == null) {
+      await AsyncStorage.setItem('bboxAuthToken', response.authToken);
+      await AsyncStorage.setItem('bboxUserId', response.userId);
+      dispatch({
+        type: types.LOGGED_IN_USER,
+        payload: response.authToken,
+      });
+    } else {
+      Alert.alert(response.error);
+      return;
+    }
   };
 };
