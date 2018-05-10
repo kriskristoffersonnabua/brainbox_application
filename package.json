@@ -12,6 +12,9 @@
     "react": "16.3.1",
     "react-native": "0.55.3",
     "react-native-config": "^0.11.5",
+    "react-native-gesture-handler": "^1.0.0-alpha.43",
+    "react-native-popup-menu": "^0.13.1",
+    "react-native-tab-view": "^0.0.77",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
@@ -27,6 +30,8 @@
     "preset": "react-native"
   },
   "rnpm": {
-    "assets": ["./assets/fonts/"]
+    "assets": [
+      "./assets/fonts/"
+    ]
   }
 }

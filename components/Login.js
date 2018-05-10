@@ -10,6 +10,9 @@ import {
 } from 'react-native';
 import Button from './Button';
 import TextField from './TextField';
+import {connect} from 'react-redux';
+import Actions from '../actions';
+const {goToSignupPage, authenticateUser} = Actions;
 
 class Login extends React.Component {
   constructor(props) {
@@ -23,32 +26,41 @@ class Login extends React.Component {
           style={styles.imageStyle}
           source={require('../assets/images/BrainboxTitle.png')}
         />
-        <TextField title="Email" onChangeText={email => this.setState({email})} />
-        <TextField title="Password" onChangeText={password => this.setState({password})} />
-        <Button type="confirm" text="Login" onPress={this.login}/>
+        <TextField
+          title="Email"
+          onChangeText={email => this.setState({email})}
+        />
+        <TextField
+          title="Password"
+          onChangeText={password => this.setState({password})}
+          secureTextEntry={true}
+        />
+        <Button type="confirm" text="Login" onPress={this.login} />
         <Text style={styles.orStyle}>or</Text>
         <Button type="facebook" text="Facebook" />
         <Button type="google" text="Google" />
-        <TouchableOpacity onPress={this.props.signuppage}>
-          <Text style={{
-            fontSize: 10,
-            marginTop: 10,
-            marginBottom: 10
-          }}> Create Account </Text>
+        <TouchableOpacity onPress={this.props.goToSignupPage}>
+          <Text
+            style={{
+              fontSize: 10,
+              marginTop: 10,
+              marginBottom: 10,
+            }}>
+            {' '}
+            Create Account{' '}
+          </Text>
         </TouchableOpacity>
       </View>
     );
   }
   login = () => {
     let data = this.state;
-    console.log(data);
     try {
-      this.props.loginUser(data);
-    }
-    catch(exception){
+      this.props.authenticateUser(data);
+    } catch (exception) {
       console.log(exception);
     }
-  }
+  };
 }
 
 const styles = StyleSheet.create({
@@ -76,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default connect(null, {goToSignupPage, authenticateUser})(Login);

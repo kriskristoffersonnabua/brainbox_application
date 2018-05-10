@@ -17,6 +17,9 @@ import TextField from './TextField.js';
 import {AccountType} from '../lib/constants';
 import * as _ from 'lodash';
 import Config from 'react-native-config';
+import {connect} from 'react-redux';
+import Actions from '../actions';
+const { goToLoginPage, signupUserAction } = Actions;
 
 class Signup extends React.Component {
   constructor(props) {
@@ -135,7 +138,7 @@ class Signup extends React.Component {
           By signing up, you agree to the terms and condition of brainbox
         </Text>
         <Button type="confirm" text="Signup" onPress={this.submitData} />
-        <TouchableOpacity onPress={this.props.loginpage}>
+        <TouchableOpacity onPress={this.props.goToLoginPage}>
           <Text
             style={{
               fontSize: 10,
@@ -178,7 +181,7 @@ class Signup extends React.Component {
     //sanitize data
     //submit data wait for auth token
     try {
-      this.props.signup(data);
+      this.props.signupUserAction(data);
     } catch (exception) {
       console.log(exception);
     }
@@ -193,4 +196,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+export default connect(null,{goToLoginPage,signupUserAction})(Signup);

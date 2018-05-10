@@ -13,6 +13,7 @@ export default (TextField = props => {
       placeholder={props.title || ''}
       onChangeText={props.onChangeText || null}
       onFocus={props.onFocus || null}
+      secureTextEntry={props.secureTextEntry || false}
       {...props}
     />
   );

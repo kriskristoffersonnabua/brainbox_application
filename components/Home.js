@@ -3,16 +3,11 @@ import {StyleSheet, View} from 'react-native';
 import {connect} from 'react-redux';
 import Signup from './Signup';
 import Login from './Login';
-import UserDashboard from './UserDashboard';
+import UserDashboard from './dashboard/UserDashboard';
+import Layout from './layouts/dashboard-layout';
 import Actions from '../actions';
-const {
-  signupUserAction,
-  loggedInUser,
-  signoutUser,
-  goToSignupPage,
-  goToLoginPage,
-  authenticateUser,
-} = Actions;
+import {MenuProvider} from 'react-native-popup-menu';
+const {loggedInUser} = Actions;
 
 class Home extends React.Component {
   componentWillMount() {
@@ -20,31 +15,31 @@ class Home extends React.Component {
   }
   render() {
     let component;
-    console.log(this.props);
-    if (this.props.authToken) {
-      component = <UserDashboard logout={this.props.signoutUser} />;
+    if (true) {
+      component = <Layout template={UserDashboard} />;
     } else {
       component =
         this.props.landingPage == 'Signup' ? (
-          <Signup
-            signup={this.props.signupUserAction}
-            loginpage={this.props.goToLoginPage}
-          />
+          <Signup />
         ) : this.props.landingPage == 'Login' ? (
-          <Login
-            signuppage={this.props.goToSignupPage}
-            loginUser={this.props.authenticateUser}
-          />
+          <Login loginUser={this.props.authenticateUser} />
         ) : (
-          <Signup
-            signup={this.props.signupUserAction}
-            loginpage={this.props.goToLoginPage}
-          />
+          <Signup />
         );
     }
-    return <View>{component}</View>;
+    return (
+      <MenuProvider style={styles.container}>
+        {component}
+      </MenuProvider>
+    );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 const mapStateToProps = state => {
   return {
@@ -57,11 +52,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {
-  loggedInUser,
-  goToSignupPage,
-  goToLoginPage,
-  signoutUser,
-  signupUserAction,
-  authenticateUser,
-})(Home);
+export default connect(mapStateToProps, {loggedInUser})(Home);
