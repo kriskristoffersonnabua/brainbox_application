@@ -5,6 +5,7 @@ import LocalImage from '../../reusables/LocalImage';
 import {windowDimensions} from '../../../lib/device';
 import Button from '../../reusables/Button';
 import TextField from '../../reusables/TextField';
+import TutorCard from '../../reusables/TutorCard';
 import Dash from 'react-native-dash';
 
 class SearchTutor extends Component {
@@ -37,7 +38,7 @@ class SearchTutor extends Component {
           <Dash style={{width: 310, height: 2}} dashLength={5} dashGap={5} dashColor={'#979797'}/>
           <View style={{flex: 1}}>
             <TextField style={{marginBottom: -5, fontSize: 10}} width={290} placeholder="Tutor Name" onChangeText={()=>{}} />
-            <View style={{flexDirection: 'row', fontFamily: 'Roboto Mono'}}>
+            <View style={{flexDirection: 'row'}}>
               <TextField width={150} placeholder="Subject" onChangeText={()=>{}} />
               <TextField width={67} placeholder="Time" onChangeText={()=>{}} />
               <TextField width={67} placeholder="Date" onChangeText={()=>{}} />
@@ -49,7 +50,13 @@ class SearchTutor extends Component {
           <Text style={{
             margin: 20
           }}>Results:</Text>
-          <ScrollView style={{flex: 1, alignSelf: 'stretch'}}>
+          <ScrollView style={{width: windowDimensions.width}}>
+            <TutorCard tutorName="Kris Kristofferson" available/>
+            <TutorCard tutorName="Kris Kristofferson" available/>
+            <TutorCard tutorName="Kris Kristofferson" available/>
+            <TutorCard tutorName="Kris Kristofferson Nabue" />
+            <TutorCard tutorName="Kris Kristofferson Nabue" />
+            <TutorCard tutorName="Kris Kristofferson Nabue" />
           </ScrollView>
         </View>
       </View>

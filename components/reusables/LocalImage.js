@@ -24,7 +24,8 @@ const LocalImage = ({resize, scale, widthPadding, source, originalWidth, origina
       source={source}
       style={{
         width,
-        height
+        height,
+        resizeMode: 'contain',
       }}
     />
   )

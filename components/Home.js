@@ -14,8 +14,6 @@ class Home extends React.Component {
   }
   render() {
     let component;
-    console.log(AsyncStorage);
-    console.log(this.props.authToken);
     if (this.props.authToken != null) {
       component = <Layout template={UserDashboard} />;
     } else {

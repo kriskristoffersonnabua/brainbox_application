@@ -52,13 +52,15 @@ class Header extends React.Component {
         <View style={styles.headerBar}>
           <TouchableOpacity onPress={this._toggleMenu}>
             <LocalImage
-              source={require('../../assets/images/avatars/defaultAvatar.png')}
+              rescale
+              source={require('../../assets/images/avatars/defaultTutorAvatar.png')}
               originalWidth={57}
               originalHeight={61}
             />
           </TouchableOpacity>
           <LocalImage
-            source={require('../../assets/images/BrainboxTitle.png')}
+            rescale
+            source={require('../../assets/images/bboxTitlePage.png')}
             originalWidth={225}
             originalHeight={50}
           />
