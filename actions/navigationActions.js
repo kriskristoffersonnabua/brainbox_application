@@ -2,7 +2,6 @@ import * as types from './types';
 
 export const goToLoginPage = () => {
   return dispatch => {
-    console.log("clicked");
     dispatch({
       type: types.LOGIN_PAGE,
       payload: 'Login',

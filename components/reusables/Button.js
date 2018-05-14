@@ -22,17 +22,19 @@ export default (ButtonComponent = props => {
     default:
       backgroundColor = '#BDF287';
   }
+  const width = props.width || 220;
+  const height = props.height || 40;
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      style={{
-        width: 221,
-        height: 40,
+      style={[{
+        width,
+        height,
         borderRadius: 25,
         backgroundColor,
         justifyContent: 'center',
         alignItems: 'center',
-      }}>
+      },props.style]}>
       <Text
         style={{
           fontSize: 18,

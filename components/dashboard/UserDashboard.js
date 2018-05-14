@@ -1,11 +1,10 @@
 import React from 'react';
 import {StyleSheet, View, Text, Dimensions} from 'react-native';
-import Button from '../Button';
 import {connect} from 'react-redux';
 import Actions from '../../actions';
 const {signoutUser} = Actions;
 import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
-import Programs from './Programs';
+import Services from './Services/index.js';
 
 const initialLayout = {
   height: 0,
@@ -43,23 +42,23 @@ class UserDashboard extends React.Component {
     ],
   };
   _renderScene = SceneMap({
-    first: Programs,
+    first: Services,
     second: TutorsTab,
     third: BookedTutorials,
     fourth: Help,
   });
-  _renderHeader = props => <TabBar {...props} style={styles.header}/>;
+  _renderHeader = props => <TabBar {...props} style={styles.header} />;
   _handleIndexChange = index => this.setState({index});
   render() {
     return (
-        <TabViewAnimated
-          style={styles.container}
-          navigationState={this.state}
-          renderScene={this._renderScene}
-          renderHeader={this._renderHeader}
-          initialLayout={initialLayout}
-          onIndexChange={this._handleIndexChange}
-        />
+      <TabViewAnimated
+        style={styles.container}
+        navigationState={this.state}
+        renderScene={this._renderScene}
+        renderHeader={this._renderHeader}
+        initialLayout={initialLayout}
+        onIndexChange={this._handleIndexChange}
+      />
     );
   }
 }
@@ -67,12 +66,12 @@ class UserDashboard extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#ffffff'
   },
   header: {
     width: Dimensions.get('window').width,
     height: 50,
-    marginTop: 30
-  }
+  },
 });
 
 export default connect(null, {signoutUser})(UserDashboard);

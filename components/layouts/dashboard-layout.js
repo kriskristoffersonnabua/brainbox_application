@@ -1,10 +1,9 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
-import Header from '../Header';
+import Header from '../reusables/Header';
 
 class DashboardLayout extends React.Component {
   render() {
-    console.log(this.props);
     const {template: Template} = this.props;
     return (
       <View style={styles.container}>

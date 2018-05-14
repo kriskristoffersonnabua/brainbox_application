@@ -1,8 +1,6 @@
 import React from 'react';
 import {
   Image,
-  Alert,
-  Picker,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,11 +10,12 @@ import {
   Keyboard,
   DatePickerAndroid,
 } from 'react-native';
-import Button from './Button';
-import TextField from './TextField.js';
+import Button from './reusables/Button';
+import TextField from './reusables/TextField.js';
 import {AccountType} from '../lib/constants';
 import * as _ from 'lodash';
 import Config from 'react-native-config';
+
 import {connect} from 'react-redux';
 import Actions from '../actions';
 const { goToLoginPage, signupUserAction } = Actions;
@@ -84,42 +83,41 @@ class Signup extends React.Component {
           />
         </View>
         <TextField
-          title="Email"
+          placeholder="Email"
           onChangeText={email => this.setState({email})}
           value={this.state.email}
           keyboardType="email-address"
         />
         <TextField
-          title="Password"
+          placeholder="Password"
           onChangeText={password => this.setState({password})}
           value={this.state.password}
+          secure
         />
         <TextField
-          title="Firstname"
+          placeholder="Firstname"
           onChangeText={firstname => this.setState({firstname})}
           value={this.state.firstname}
         />
         <TextField
-          title="Lastname"
+          placeholder="Lastname"
           onChangeText={lastname => this.setState({lastname})}
           value={this.state.lastname}
         />
         <TextField
-          title="Contact/Mobile Number"
+          placeholder="Contact/Mobile Number"
           onChangeText={contact => this.setState({contact})}
           value={this.state.contact}
         />
         <TextField
-          title="Birthday"
+          placeholder="Birthday"
           onFocus={async evt => {
             Keyboard.dismiss();
             const {action, year, month, day} = await DatePickerAndroid.open({
               date: new Date(),
             });
-            console.log(action);
             if (action != DatePickerAndroid.dismissedAction) {
               const newDate = new Date(year, month, day);
-              console.log(this);
               this.setState({
                 birthday: newDate.toISOString(),
                 birthdayToString: `${newDate.getMonth()}-${newDate.getDate()}-${newDate.getFullYear()}`,
@@ -146,7 +144,7 @@ class Signup extends React.Component {
               marginBottom: 10,
               marginTop: 10,
             }}>
-            Click here to go to login page.
+            Tap here to go to login page.
           </Text>
         </TouchableOpacity>
       </View>
@@ -176,7 +174,7 @@ class Signup extends React.Component {
       'accountMessage',
       'birthdayToString',
     ]);
-    // Alert.alert('' + this.state);
+    console.log(data);
     //verify data
     //sanitize data
     //submit data wait for auth token

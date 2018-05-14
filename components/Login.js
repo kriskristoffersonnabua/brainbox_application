@@ -1,15 +1,15 @@
 import React from 'react';
 import {
-  StyleSheet,
-  TextInput,
-  View,
-  Text,
-  Image,
   AsyncStorage,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import Button from './Button';
-import TextField from './TextField';
+import Button from './reusables/Button';
+import TextField from './reusables/TextField';
 import {connect} from 'react-redux';
 import Actions from '../actions';
 const {goToSignupPage, authenticateUser} = Actions;
@@ -27,13 +27,13 @@ class Login extends React.Component {
           source={require('../assets/images/BrainboxTitle.png')}
         />
         <TextField
-          title="Email"
+          placeholder="Email"
           onChangeText={email => this.setState({email})}
         />
         <TextField
-          title="Password"
+          placeholder="Password"
           onChangeText={password => this.setState({password})}
-          secureTextEntry={true}
+          secure
         />
         <Button type="confirm" text="Login" onPress={this.login} />
         <Text style={styles.orStyle}>or</Text>

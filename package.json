@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "dev": "nodemon --exec 'react-native run-android'",
+    "dev": "nodemon --exec 'react-native run-android' .",
     "test": "jest"
   },
   "dependencies": {
@@ -12,8 +12,11 @@
     "react": "16.3.1",
     "react-native": "0.55.3",
     "react-native-config": "^0.11.5",
+    "react-native-dash": "0.0.8",
     "react-native-gesture-handler": "^1.0.0-alpha.43",
     "react-native-popup-menu": "^0.13.1",
+    "react-native-shadow": "^1.2.2",
+    "react-native-svg": "^6.3.1",
     "react-native-tab-view": "^0.0.77",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",

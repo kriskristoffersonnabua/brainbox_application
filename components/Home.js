@@ -1,12 +1,11 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
 import Signup from './Signup';
 import Login from './Login';
 import UserDashboard from './dashboard/UserDashboard';
 import Layout from './layouts/dashboard-layout';
 import Actions from '../actions';
-import {MenuProvider} from 'react-native-popup-menu';
 const {loggedInUser} = Actions;
 
 class Home extends React.Component {
@@ -15,7 +14,9 @@ class Home extends React.Component {
   }
   render() {
     let component;
-    if (true) {
+    console.log(AsyncStorage);
+    console.log(this.props.authToken);
+    if (this.props.authToken != null) {
       component = <Layout template={UserDashboard} />;
     } else {
       component =
@@ -24,20 +25,17 @@ class Home extends React.Component {
         ) : this.props.landingPage == 'Login' ? (
           <Login loginUser={this.props.authenticateUser} />
         ) : (
-          <Signup />
+          <Login />
         );
     }
-    return (
-      <MenuProvider style={styles.container}>
-        {component}
-      </MenuProvider>
-    );
+    return <View style={styles.container}>{component}</View>;
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'stretch',
   },
 });
 
