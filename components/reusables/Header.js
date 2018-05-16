@@ -61,7 +61,7 @@ class Header extends React.Component {
           <LocalImage
             rescale
             source={require('../../assets/images/bboxTitlePage.png')}
-            originalWidth={225}
+            originalWidth={160}
             originalHeight={50}
           />
         </View>

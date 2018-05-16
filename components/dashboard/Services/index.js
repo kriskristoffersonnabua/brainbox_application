@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { View, StyleSheet } from 'react-native'
 import ServicesList from './ServicesList';
 import SearchTutor from './SearchTutor';
+import TutorialBooking from './TutorialBooking';
 
 class Main extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class Main extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <SearchTutor />
+        <TutorialBooking />
       </View>
     );
   }

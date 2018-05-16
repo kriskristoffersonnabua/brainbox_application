@@ -31,7 +31,7 @@ const TutorCard = props => {
             newHeight={120}/>
           <View style={styles.tutorCardInformation}>
             <Text style={{
-              fontFamily: 'Roboto Mono',
+              fontFamily: 'curlz mt',
               fontSize: 18
             }}>{props.tutorName}</Text>
           {props.available? <AvailableText />: <UnavailableText />}
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '90%',
+    width: '80%',
     height: 90,
     backgroundColor: '#fafafa'
   },

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Image } from 'react-native'
 import { windowDimensions } from '../../lib/device.js';
 
-const LocalImage = ({resize, scale, widthPadding, source, originalWidth, originalHeight, newWidth, newHeight}) => {
+const LocalImage = ({style, resize, scale, widthPadding, source, originalWidth, originalHeight, newWidth, newHeight}) => {
   let width, height;
   if (scale) {
     let windowWidth = windowDimensions.width;
@@ -22,11 +22,11 @@ const LocalImage = ({resize, scale, widthPadding, source, originalWidth, origina
   return (
     <Image 
       source={source}
-      style={{
+      style={[{
         width,
         height,
         resizeMode: 'contain',
-      }}
+      },style]}
     />
   )
 }
