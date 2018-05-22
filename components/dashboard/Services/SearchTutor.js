@@ -32,7 +32,7 @@ class SearchTutor extends Component {
               fontSize: 12,
               fontWeight: 'bold',
               color: '#2b2b2b',
-              fontFamily: 'Roboto Mono',
+              fontFamily: 'RobotoMono',
             }}>Search Available Tutor:</Text>
           </View>
           <Dash style={{width: 310, height: 2}} dashLength={5} dashGap={5} dashColor={'#979797'}/>
@@ -50,7 +50,7 @@ class SearchTutor extends Component {
           <Text style={{
             margin: 20
           }}>Results:</Text>
-          <ScrollView style={{width: windowDimensions.width}}>
+          <ScrollView style={{width: '100%', paddingTop: 5}}>
             <TutorCard tutorName="Kris Kristofferson" available/>
             <TutorCard tutorName="Kris Kristofferson" available/>
             <TutorCard tutorName="Kris Kristofferson" available/>
@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#fff',
+    padding: 10
   },
   backButtonContainer: {
-    width: windowDimensions.width,
+    width: '100%',
     height: 25,
-    padding: 5
   },
   backButton: {
     flexDirection: 'row',

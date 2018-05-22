@@ -44,9 +44,9 @@ const TutorCard = props => {
 
 const styles = StyleSheet.create({
   tutorCardContainer: {
-    width: windowDimensions.width,
+    width: '100%',
     height: 120,
-    backgroundColor: '#fff',
+    backgroundColor: 'blue',
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center'

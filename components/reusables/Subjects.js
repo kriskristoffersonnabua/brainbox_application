@@ -5,7 +5,7 @@ import ModalDropdown from 'react-native-modal-dropdown';
 
 const colors = ['#E66464', '#F4BDDB', '#97E6F0', '#BDF287', '#E9905C'];
 const Subject = props => {
-  let backgroundColor = colors[Math.floor(Math.random() * 4)];
+  let backgroundColor = colors[props.random];
   return (
     <TouchableOpacity
       {...props}
@@ -52,6 +52,7 @@ class Subjects extends Component {
                 key={index}
                 index={index}
                 subject={subject}
+                random={index % (colors.length-1)}
               />
             );
           })}
