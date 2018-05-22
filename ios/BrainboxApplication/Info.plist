@@ -64,6 +64,16 @@
 		<string>RobotoMono-Regular.ttf</string>
 		<string>RobotoMono-Thin.ttf</string>
 		<string>RobotoMono-ThinItalic.ttf</string>
+		<string>RobotoMonoBold.ttf</string>
+		<string>RobotoMonoBoldItalic.ttf</string>
+		<string>RobotoMonoItalic.ttf</string>
+		<string>RobotoMonoLight.ttf</string>
+		<string>RobotoMonoLightItalic.ttf</string>
+		<string>RobotoMonoMedium.ttf</string>
+		<string>RobotoMonoMediumItalic.ttf</string>
+		<string>RobotoMonoRegular.ttf</string>
+		<string>RobotoMonoThin.ttf</string>
+		<string>RobotoMonoThinItalic.ttf</string>
 	</array>
 </dict>
 </plist>

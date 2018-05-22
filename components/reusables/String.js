@@ -3,13 +3,13 @@ import {Text} from 'react-native';
 const String = props => {
   let fontFamily;
   if(props.bold){
-    fontFamily = 'RobotoMono-Bold';
+    fontFamily = 'RobotoMonoBold';
   }
   else if(props.italic){
-    fontFamily = 'RobotoMono-Italic';
+    fontFamily = 'RobotoMonoItalic';
   }
   else {
-    fontFamily = 'RobotoMono-Regular';
+    fontFamily = 'RobotoMonoRegular';
   }
   return (
     <Text

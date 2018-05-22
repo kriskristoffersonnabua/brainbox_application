@@ -8,8 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Button from './reusables/Button';
-import TextField from './reusables/TextField';
+import {Button, TextField} from './reusables';
 import {connect} from 'react-redux';
 import Actions from '../actions';
 const {goToSignupPage, authenticateUser} = Actions;

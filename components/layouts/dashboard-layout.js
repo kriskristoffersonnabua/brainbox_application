@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Text, Image} from 'react-native';
-import Header from '../reusables/Header';
+import {Header} from '../reusables';
 
 class DashboardLayout extends React.Component {
   render() {

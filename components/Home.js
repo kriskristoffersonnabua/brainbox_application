@@ -21,7 +21,7 @@ class Home extends React.Component {
         this.props.landingPage == 'Signup' ? (
           <Signup />
         ) : this.props.landingPage == 'Login' ? (
-          <Login loginUser={this.props.authenticateUser} />
+          <Login />
         ) : (
           <Login />
         );

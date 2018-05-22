@@ -10,8 +10,7 @@ import {
   Keyboard,
   DatePickerAndroid,
 } from 'react-native';
-import Button from './reusables/Button';
-import TextField from './reusables/TextField.js';
+import {Button, TextField} from './reusables';
 import {AccountType} from '../lib/constants';
 import * as _ from 'lodash';
 import Config from 'react-native-config';
@@ -174,7 +173,6 @@ class Signup extends React.Component {
       'accountMessage',
       'birthdayToString',
     ]);
-    console.log(data);
     //verify data
     //sanitize data
     //submit data wait for auth token

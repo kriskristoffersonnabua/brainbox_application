@@ -26,7 +26,7 @@ export default (ButtonComponent = props => {
   const height = props.height || 40;
   return (
     <TouchableOpacity
-      onPress={props.onPress}
+      onPress={props.onPress || null}
       style={[{
         width,
         height,
@@ -37,7 +37,7 @@ export default (ButtonComponent = props => {
       },props.style]}>
       <Text
         style={{
-          fontSize: 18,
+          fontSize: props.fontSize || 18,
           textAlign: 'center',
           color: '#fafafa',
         }}>

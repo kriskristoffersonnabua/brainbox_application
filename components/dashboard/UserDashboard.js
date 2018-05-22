@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import Actions from '../../actions';
 const {signoutUser} = Actions;
 import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
-import Services from './Services/index.js';
+import Services from './Services';
 
 const initialLayout = {
   height: 0,
@@ -37,7 +37,7 @@ class UserDashboard extends React.Component {
     routes: [
       {key: 'first', title: 'Services'},
       {key: 'second', title: 'Tutors'},
-      {key: 'third', title: 'Booked Tutorials'},
+      {key: 'third', title: 'Booked'},
       {key: 'fourth', title: 'Help'},
     ],
   };
