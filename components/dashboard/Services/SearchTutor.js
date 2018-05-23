@@ -46,11 +46,11 @@ class SearchTutor extends Component {
             <Button style={{alignSelf: 'center'}}type="confirm" text="Search" width={95} height={40}/>
           </View>
         </View>
-        <View style={{flex: 1, justifyContent: 'flex-start', alignItems: 'center'}}>
+        <View style={{paddingRight: 20, paddingLeft: 20, flex: 1, justifyContent: 'flex-start', alignItems: 'center'}}>
           <Text style={{
-            margin: 20
+            margin: 10
           }}>Results:</Text>
-          <ScrollView style={{width: '100%', paddingTop: 5}}>
+          <ScrollView style={{width: '100%', paddingTop: 10}}>
             <TutorCard tutorName="Kris Kristofferson" available/>
             <TutorCard tutorName="Kris Kristofferson" available/>
             <TutorCard tutorName="Kris Kristofferson" available/>

@@ -45,17 +45,17 @@ const TutorCard = props => {
 const styles = StyleSheet.create({
   tutorCardContainer: {
     width: '100%',
-    height: 120,
-    backgroundColor: 'blue',
+    backgroundColor: '#fff',
     alignSelf: 'center',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 5,
   },
   tutorCard: {
     borderRadius: 5,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '80%',
+    width: '100%',
     height: 90,
     backgroundColor: '#fafafa'
   },
