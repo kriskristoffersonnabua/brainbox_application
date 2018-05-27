@@ -14,8 +14,6 @@ const Subject = props => {
         padding: 5,
         borderRadius: 5,
         margin: 5,
-        borderWdith: 1,
-        borderColor: '#979797',
       }}>
       <String style={{color: '#fafafa'}} text={props.subject} />
     </TouchableOpacity>
@@ -26,7 +24,7 @@ class Subjects extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      subjects: [],
+      subjects: props.subjects || [],
       availableSubjects: [
         'College Algebra 1',
         'Chemistry 3',
@@ -35,6 +33,10 @@ class Subjects extends Component {
         'Geometry 3',
       ],
     };
+  }
+  componentWillReceiveProps(nextProps){
+    const {subjects} = nextProps;
+    this.setState({subjects})
   }
   render() {
     return (
@@ -57,27 +59,29 @@ class Subjects extends Component {
             );
           })}
         </View>
-        <ModalDropdown
-          style={{
-            width: 80,
-            borderWidth: 1,
-            borderColor: '#979797',
-            borderRadius: 5,
-            padding: 5,
-            alignSelf: 'center',
-          }}
-          defaultValue={'Add Subject'}
-          dropdownStyle={{
-            width: '80%',
-          }}
-          onSelect={(index, value) => {
-            let subjects = this.state.subjects;
-            subjects.push(value);
-            this.setState({subjects});
-          }}
-          renderButtonText={() => 'Add Subject'}
-          options={this.state.availableSubjects}
-        />
+        {
+          !this.props.readOnly?
+            <ModalDropdown
+              style={{
+                width: 80,
+                borderWidth: 1,
+                borderColor: '#979797',
+                borderRadius: 5,
+                padding: 5,
+                alignSelf: 'center',
+              }}
+              defaultValue={'Add Subject'}
+              dropdownStyle={{
+              }}
+              onSelect={(index, value) => {
+                let subjects = this.state.subjects;
+                subjects.push(value);
+                this.setState({subjects});
+              }}
+              renderButtonText={() => 'Add Subject'}
+              options={this.state.availableSubjects}
+            />: null
+        }
       </View>
     );
   }

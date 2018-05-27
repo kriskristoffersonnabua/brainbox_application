@@ -16,6 +16,7 @@ const String = props => {
       style={[{
         fontSize: props.fontSize || 10,
         fontFamily: props.fontFamily || fontFamily,
+        textAlign: props.textAlign || 'center'
       },props.style]}
       {...props}
       >

@@ -3,6 +3,12 @@ import {StyleSheet, View, AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
 import Signup from './Signup';
 import Login from './Login';
+import {
+  TutorAccountSettingsEdit, 
+  TutorAccountSettings,
+  ClientAccountSettings,
+  ClientAccountSettingsEdit,
+} from './AccountSettings';
 import UserDashboard from './dashboard/UserDashboard';
 import Layout from './layouts/dashboard-layout';
 import Actions from '../actions';
@@ -16,6 +22,9 @@ class Home extends React.Component {
     let component;
     if (this.props.authToken != null) {
       component = <Layout template={UserDashboard} />;
+      // component = <ClientAccountSettingsEdit />;
+      // component = <Login />
+      // component = <Signup />
     } else {
       component =
         this.props.landingPage == 'Signup' ? (
@@ -33,7 +42,8 @@ class Home extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'stretch',
+    alignSelf: 'stretch',
+    padding: 10
   },
 });
 
