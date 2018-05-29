@@ -12,7 +12,7 @@ import LocalImage from './LocalImage';
 import {windowDimensions} from '../../lib/device';
 import {connect} from 'react-redux';
 import Actions from '../../actions';
-const {signoutUser} = Actions;
+const {signoutUser,goToAccountSettings} = Actions;
 
 const MenuItem = props => {
   return (
@@ -66,7 +66,7 @@ class Header extends React.Component {
           />
         </View>
         <View>
-          <MenuItem text={"Account Settings"} onPress={()=>{}}/>
+          <MenuItem text={"Account Settings"} onPress={this.props.goToAccountSettings}/>
           <MenuItem text={"Help"} onPress={()=>{}}/>
           <MenuItem text={"Logout"} onPress={this.props.signoutUser}/>
         </View>
@@ -92,4 +92,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(null,{signoutUser})(Header);
+export default connect(null,{signoutUser,goToAccountSettings})(Header);

@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {insertTutorSchedule,parseTutorSchedule} from '../../lib/converter';
 import {String} from '../reusables';
+import {connect} from 'react-redux';
+import Actions from '../../actions';
+const {getTutorSched} = Actions;
 
 class TutorSchedule extends Component {
   constructor(props) {
@@ -39,8 +42,56 @@ class TutorSchedule extends Component {
       o, oSchedule: parseTutorSchedule(o),
     }
   }
-
+  componentWillMount(){
+    this.props.getTutorSched();
+  }
+  componentWillReceiveProps(nextProps){
+    const {schedule, tutorSchedule} = this.props;
+    if(schedule){
+      const {a,b,c,d,e,f,g,h,i,j,k,l,m,n,o} = schedule;
+      this.setState({
+        a, aSchedule: parseTutorSchedule(a),
+        b, bSchedule: parseTutorSchedule(b),
+        c, cSchedule: parseTutorSchedule(c),
+        d, dSchedule: parseTutorSchedule(d),
+        e, eSchedule: parseTutorSchedule(e),
+        f, fSchedule: parseTutorSchedule(f),
+        g, gSchedule: parseTutorSchedule(g),
+        h, hSchedule: parseTutorSchedule(h),
+        i, iSchedule: parseTutorSchedule(i),
+        j, jSchedule: parseTutorSchedule(j),
+        k, kSchedule: parseTutorSchedule(k),
+        l, lSchedule: parseTutorSchedule(l),
+        m, mSchedule: parseTutorSchedule(m),
+        n, nSchedule: parseTutorSchedule(n),
+        o, oSchedule: parseTutorSchedule(o),
+      })
+    }
+    else if(tutorSchedule) {
+      console.log(tutorSchedule);
+      const {a,b,c,d,e,f,g,h,i,j,k,l,m,n,o} = tutorSchedule;
+      this.setState({
+        a: tutorSchedule[0], aSchedule: parseTutorSchedule(tutorSchedule[0]),
+        b: tutorSchedule[1], bSchedule: parseTutorSchedule(tutorSchedule[1]),
+        c: tutorSchedule[2], cSchedule: parseTutorSchedule(tutorSchedule[2]),
+        e: tutorSchedule[3], eSchedule: parseTutorSchedule(tutorSchedule[3]),
+        d: tutorSchedule[4], dSchedule: parseTutorSchedule(tutorSchedule[4]),
+        f: tutorSchedule[5], fSchedule: parseTutorSchedule(tutorSchedule[5]),
+        g: tutorSchedule[6], gSchedule: parseTutorSchedule(tutorSchedule[6]),
+        h: tutorSchedule[7], hSchedule: parseTutorSchedule(tutorSchedule[7]),
+        i: tutorSchedule[8], iSchedule: parseTutorSchedule(tutorSchedule[8]),
+        j: tutorSchedule[9], jSchedule: parseTutorSchedule(tutorSchedule[9]),
+        k: tutorSchedule[10], kSchedule: parseTutorSchedule(tutorSchedule[10]),
+        l: tutorSchedule[11], lSchedule: parseTutorSchedule(tutorSchedule[11]),
+        m: tutorSchedule[12], mSchedule: parseTutorSchedule(tutorSchedule[12]),
+        n: tutorSchedule[13], nSchedule: parseTutorSchedule(tutorSchedule[13]),
+        o: tutorSchedule[14], oSchedule: parseTutorSchedule(tutorSchedule[14]),
+      })
+    }
+  }
   render() {
+    console.log('scheduler props', this.props);
+    console.log('scheduler state', this.state);
     return (
       <View style={styles.container}>
         <View
@@ -645,4 +696,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TutorSchedule;
+const mapStateToProps = state => {
+  return {
+    tutorSchedule: state.getTutorSched.schedule,
+  };
+};
+
+export default connect(mapStateToProps, {getTutorSched})(
+  TutorSchedule ,
+);

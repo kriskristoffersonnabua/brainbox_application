@@ -1,14 +1,21 @@
 import * as types from './types';
 import {AsyncStorage, Alert} from 'react-native';
-import {signupUser, loginUser} from '../lib/api';
+import {signupUser, loginUser, updateUserInformation} from '../lib/api';
 
 export const loggedInUser = () => {
   return dispatch => {
     AsyncStorage.getItem('bboxAuthToken').then(authToken => {
-      dispatch({
-        type: types.LOGGED_IN_USER,
-        payload: authToken,
-      });
+      if(authToken != null){
+        dispatch({
+          type: types.LOGGED_IN_USER,
+          payload: authToken,
+        });
+      }
+      else {
+        dispatch({
+          type: types.LOGGED_OUT_USER,
+        });
+      }
     });
   };
 };
@@ -31,8 +38,18 @@ export const signoutUser = () => {
     await AsyncStorage.removeItem('bboxAuthToken');
     const authToken = false;
     dispatch({
-      type: types.LOGGED_IN_USER,
+      type: types.LOGGED_OUT_USER,
       payload: authToken,
+    });
+  };
+};
+
+export const updateUserInfo = body => {
+  return async dispatch => {
+    await updateUserInformation(body);
+    dispatch({
+      type: types.ACCOUNT_SETTINGS_PAGE,
+      payload: 'AccountSettings',
     });
   };
 };

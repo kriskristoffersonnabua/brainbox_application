@@ -6,21 +6,13 @@ const {signoutUser} = Actions;
 import {TabViewAnimated, TabBar, SceneMap} from 'react-native-tab-view';
 import Services from './Services';
 import Bookings from './Bookings';
+import Tutors from './Tutors';
 
 const initialLayout = {
   height: 0,
   width: Dimensions.get('window').width,
 };
-const TutorsTab = props => (
-  <View style={styles.container}>
-    <Text>HEY</Text>
-  </View>
-);
-const BookedTutorials = props => (
-  <View style={styles.container}>
-    <Text>Booked Tutorials</Text>
-  </View>
-);
+
 const Help = props => (
   <View style={styles.container}>
     <Text>Help</Text>
@@ -39,7 +31,7 @@ class UserDashboard extends React.Component {
   };
   _renderScene = SceneMap({
     first: Services,
-    second: TutorsTab,
+    second: Tutors,
     third: Bookings,
     fourth: Help,
   });

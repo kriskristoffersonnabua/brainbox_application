@@ -47,10 +47,10 @@ class Subjects extends Component {
             flexWrap: 'wrap',
             marginBottom: 5,
           }}>
-          {this.state.subjects.map((subject, index) => {
+          {this.state.subjects && this.state.subjects.map((subject, index) => {
             return (
               <Subject
-                onPress={e => this._popSubject(index)}
+                onPress={this.props.readOnly? () => {}: e => this._popSubject(index)}
                 key={index}
                 index={index}
                 subject={subject}
@@ -74,9 +74,11 @@ class Subjects extends Component {
               dropdownStyle={{
               }}
               onSelect={(index, value) => {
-                let subjects = this.state.subjects;
+                let subjects = this.state.subjects || []
                 subjects.push(value);
-                this.setState({subjects});
+                this.setState({subjects}, () =>
+                  this.props.allSubjects(this.state.subjects),
+                );
               }}
               renderButtonText={() => 'Add Subject'}
               options={this.state.availableSubjects}
@@ -87,7 +89,7 @@ class Subjects extends Component {
   }
   _popSubject = index => {
     let subjects = this.state.subjects;
-    subjects.pop(index);
+    subjects.splice(index,1);
     this.setState({subjects}, () =>
       this.props.allSubjects(this.state.subjects),
     );

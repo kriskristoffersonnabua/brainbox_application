@@ -4,30 +4,27 @@ const initialState = {};
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case types.LOGIN_PAGE:
+    case types.ALL_TUTORS:
       return {
         ...state,
-        landingPage: action.payload,
+        tutors: action.payload,
       };
       break;
-    case types.SIGNUP_PAGE:
+    case types.ME_INFO:
       return {
         ...state,
-        landingPage: action.payload,
-      };
-      break;
-    case types.ACCOUNT_SETTINGS_PAGE:
+        user: action.payload
+      }
+    case types.TUTOR_SCHEDULE:
       return {
         ...state,
-        landingPage: action.payload,
-      };
-      break;
-    case types.USER_DASHBOARD:
+        schedule: action.payload
+      }
+    case types.USER_INFO:
       return {
         ...state,
-        landingPage: action.payload,
-      };
-      break;
+        user: action.payload
+      }
     default:
       return state;
   }

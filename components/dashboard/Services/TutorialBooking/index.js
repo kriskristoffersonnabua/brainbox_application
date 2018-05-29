@@ -157,7 +157,6 @@ class TutorialBooking extends Component {
       .catch(error => console.log(error.message));
   }
   render() {
-    console.log(this.state);
     return (
       <ScrollView style={{flex: 1, backgroundColor: 'blue'}}>
         <View style={styles.container}>
@@ -221,7 +220,10 @@ class TutorialBooking extends Component {
                   borderRadius: 5,
                   padding: 10,
                 }}>
-                <String text={"Tap on a tutee below:"} style={{marginBottom: 10}}/>
+                <String
+                  text={'Tap on a tutee below:'}
+                  style={{marginBottom: 10}}
+                />
                 {this.state.existingTutees.map((tutee, index) => {
                   return (
                     <Tutee
@@ -233,21 +235,22 @@ class TutorialBooking extends Component {
                     />
                   );
                 })}
-                  <Button
-                    width={55}
-                    type="cancel"
-                    text={'Cancel'}
-                    fontSize={12}
-                    style={{
-                      alignSelf: 'flex-start',
-                      height: 30
-                    }}
-                    onPress={() =>
-                      this.setState({
-                        existingTuteeModalVisible: !this.state.existingTuteeModalVisible,
-                      })
-                    }
-                  />
+                <Button
+                  width={55}
+                  type="cancel"
+                  text={'Cancel'}
+                  fontSize={12}
+                  style={{
+                    alignSelf: 'flex-start',
+                    height: 30,
+                  }}
+                  onPress={() =>
+                    this.setState({
+                      existingTuteeModalVisible: !this.state
+                        .existingTuteeModalVisible,
+                    })
+                  }
+                />
               </View>
             </View>
           </Modal>

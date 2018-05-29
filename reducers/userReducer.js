@@ -11,6 +11,12 @@ export default function(state = initialState, action) {
         landingPage: 'UserDashboard'
       };
       break;
+    case types.LOGGED_OUT_USER:
+      return {
+        ...state,
+        landingPage: 'Login'
+      };
+      break;
     default:
       return state;
   }

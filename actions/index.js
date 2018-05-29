@@ -3,8 +3,21 @@ import {
   signupUserAction,
   signoutUser,
   authenticateUser,
+  updateUserInfo,
 } from './userActions';
-import {goToSignupPage, goToLoginPage} from './navigationActions';
+import {
+  goToSignupPage,
+  goToLoginPage,
+  goToAccountSettings,
+  goToAccountSettingsEdit,
+  goToUserDashboard,
+} from './navigationActions';
+import {
+  getAllTutors,
+  getUserInformation,
+  getTutorSched,
+  getTutor
+} from './resourcesActions';
 
 export default (Actions = {
   loggedInUser,
@@ -13,4 +26,12 @@ export default (Actions = {
   authenticateUser,
   goToSignupPage,
   goToLoginPage,
+  getAllTutors,
+  getUserInformation,
+  goToUserDashboard,
+  goToAccountSettings,
+  goToAccountSettingsEdit,
+  updateUserInfo,
+  getTutorSched,
+  getTutor
 });
