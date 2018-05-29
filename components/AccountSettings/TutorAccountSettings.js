@@ -24,7 +24,7 @@ const {
   goToAccountSettingsEdit,
   goToUserDashboard,
   getTutorInformation,
-  getTutor
+  getTutor,
 } = Actions;
 
 class TutorAccountSettings extends Component {
@@ -44,10 +44,9 @@ class TutorAccountSettings extends Component {
     };
   }
   componentWillMount() {
-    if(this.props.tutorId){
+    if (this.props.tutorId) {
       this.props.getTutor(this.props.tutorId);
-    }
-    else{
+    } else {
       this.props.getUserInformation();
     }
   }
@@ -72,6 +71,14 @@ class TutorAccountSettings extends Component {
         newSchedule.o = user.user.schedule[13];
         newSchedule.n = user.user.schedule[14];
       }
+      let birthday;
+      let birthdayString;
+      if (user.user.birthday) {
+        birthday = new Date(user.user.birthday);
+        data = birthday.toString().split(' ');
+        console.log(birthday, data);
+        birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
+      }
       this.setState({
         firstname: user.user.firstname,
         lastname: user.user.lastname,
@@ -80,6 +87,8 @@ class TutorAccountSettings extends Component {
         contact: user.user.contact,
         subjects: user.user.subjects,
         schedule: newSchedule,
+        birthday: (user.user.birthday && birthday) || null,
+        birthdayString: (user.user.birthday && birthdayString) || '',
       });
     }
   }
@@ -233,15 +242,17 @@ class TutorAccountSettings extends Component {
             schedule={this.state.schedule}
             allTutorSchedule={this._allSchedule}
           />
-          <Button
-            text={'Edit'}
-            style={{
-              marginTop: 20,
-              marginBottom: 10,
-              alignSelf: 'center',
-            }}
-            onPress={this.props.goToAccountSettingsEdit}
-          />
+          {!this.props.tutorId ? (
+            <Button
+              text={'Edit'}
+              style={{
+                marginTop: 20,
+                marginBottom: 10,
+                alignSelf: 'center',
+              }}
+              onPress={this.props.goToAccountSettingsEdit}
+            />
+          ) : null}
         </View>
       </ScrollView>
     );
@@ -271,5 +282,5 @@ export default connect(mapStateToProps, {
   goToAccountSettingsEdit,
   goToUserDashboard,
   getTutorInformation,
-  getTutor
+  getTutor,
 })(TutorAccountSettings);

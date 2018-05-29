@@ -39,6 +39,14 @@ class TutorAccountSettingsEdit extends Component {
   componentWillReceiveProps(nextProps) {
     const {user} = nextProps;
     if (user) {
+      let birthday;
+      let birthdayString;
+      if (user.user.birthday) {
+        birthday = new Date(user.user.birthday);
+        data = birthday.toString().split(' ');
+        console.log(birthday, data);
+        birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
+      }
       this.setState({
         firstname: user.user.firstname,
         lastname: user.user.lastname,
@@ -47,6 +55,8 @@ class TutorAccountSettingsEdit extends Component {
         contact: user.user.contact,
         subjects: user.user.subjects,
         schedule: user.user.schedule,
+        birthday: (user.user.birthday && birthday) || null,
+        birthdayString: (user.user.birthday && birthdayString) || '',
       });
     }
   }
@@ -55,7 +65,7 @@ class TutorAccountSettingsEdit extends Component {
       <ScrollView>
         <View style={styles.container}>
           <TouchableOpacity
-            onPres={this.props.goToAccountSettings}
+            onPress={this.props.goToAccountSettings}
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-start',
@@ -251,7 +261,7 @@ class TutorAccountSettingsEdit extends Component {
     //sanitize data
     let data = this.state;
     delete data['accountType'];
-    data.gender = data.isMale ? 'male' : 'female';
+    data.gender = data.isMale ? 0 : 1;
     delete data['isMale'];
     delete data['birthdayString'];
 
@@ -261,6 +271,7 @@ class TutorAccountSettingsEdit extends Component {
         newSchedule.push(this.state.tutorSchedule[key]);
       });
       data['schedule'] = newSchedule;
+      delete data['tutorSchedule'];
     }
 
     console.log('data to save', data);

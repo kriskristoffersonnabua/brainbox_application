@@ -17,10 +17,18 @@ class Tutors extends Component {
   componentWillMount() {
     this.props.getAllTutors();
   }
+  backToAllTutors = () => {
+    this.setState({tutorId: null});
+  };
   render() {
     let component;
     if (this.state.tutorId) {
-      component = <TutorAccountSettings tutorId={this.state.tutorId} />;
+      component = (
+        <TutorAccountSettings
+          back={this.backToAllTutors}
+          tutorId={this.state.tutorId}
+        />
+      );
     } else {
       component =
         this.props.tutors &&

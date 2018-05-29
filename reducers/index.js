@@ -17,5 +17,6 @@ export default combineReducers({
   getAllTutors: ResourcesReducer,
   getUserInformation: ResourcesReducer,
   getTutorSched: ResourcesReducer,
-  getTutor: ResourcesReducer
+  getTutor: ResourcesReducer,
+  updateUserInfo: AppNavigationReducer,
 });

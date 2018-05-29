@@ -46,14 +46,13 @@ class ClientAccountSettings extends Component {
   componentWillReceiveProps(nextProps) {
     const {user} = nextProps;
     if (user) {
-      console.log('client editi:', user);
       let birthday;
       let birthdayString;
-      if(user.user.birthday){
+      if (user.user.birthday) {
         birthday = new Date(user.user.birthday);
         data = birthday.toString().split(' ');
         console.log(birthday, data);
-        birthdayString  = `${data[1]} ${data[2]}, ${data[3]}`;
+        birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
       }
       this.setState({
         firstname: user.user.firstname,
@@ -62,7 +61,7 @@ class ClientAccountSettings extends Component {
         address: user.user.address,
         contact: user.user.contact,
         birthday: (user.user.birthday && birthday) || null,
-        birthdayString: (user.user.birthday && birthdayString) || ''
+        birthdayString: (user.user.birthday && birthdayString) || '',
       });
     }
   }
@@ -103,7 +102,7 @@ class ClientAccountSettings extends Component {
             style={{
               flexDirection: 'row',
               marginTop: 10,
-              marginBottom: 10
+              marginBottom: 10,
             }}>
             <String
               text={`${this.state.firstname} ${this.state.lastname}`}
@@ -119,7 +118,7 @@ class ClientAccountSettings extends Component {
             }}
           />
           <String
-            text={this.state.isMale? 'Male': 'Female'}
+            text={this.state.isMale ? 'Male' : 'Female'}
             fontSize={12}
             style={{
               marginRight: 10,
@@ -216,9 +215,6 @@ class ClientAccountSettings extends Component {
       </ScrollView>
     );
   }
-  _allSchedule = schedule => {
-    this.setState({tutorSchedule: schedule});
-  };
 }
 
 const styles = StyleSheet.create({

@@ -12,16 +12,21 @@ import LocalImage from '../../reusables/LocalImage';
 
 const Service = props => {
   return (
-    <TouchableOpacity style={styles.serviceContainer}>
+    <TouchableOpacity
+      onPress={() => {
+        props.callback(props.service);
+      }}
+      style={styles.serviceContainer}>
       <View elevation={2} style={styles.serviceTab}>
-        <LocalImage 
+        <LocalImage
           originalWidth={125}
           originalHeight={65}
-          source={require('../../../assets/images/1on1tutorial.png')} />
+          source={require('../../../assets/images/1on1tutorial.png')}
+        />
         <View>
           <Text style={styles.serviceTypeText}>{props.serviceType}</Text>
           <Text style={styles.serviceTutorialText}>
-            {props.tutorial? "TUTORIAL": "REVIEW"}
+            {props.tutorial ? 'TUTORIAL' : 'REVIEW'}
           </Text>
         </View>
       </View>
@@ -37,10 +42,27 @@ class Services extends Component {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.services}>
-          <Service tutorial serviceType="1 on 1 Tutorial"/>
-          <Service serviceType="Civil Service Commision"/>
-          <Service serviceType="College Entrance Exam"/>
-          <Service serviceType="Philippine Science High School"/>
+          <Service
+            callback={this.props.callback}
+            service={0}
+            tutorial
+            serviceType="1 on 1 Tutorial"
+          />
+          <Service
+            callback={this.props.callback}
+            service={1}
+            serviceType="Civil Service Commision"
+          />
+          <Service
+            callback={this.props.callback}
+            service={2}
+            serviceType="College Entrance Exam"
+          />
+          <Service
+            callback={this.props.callback}
+            service={3}
+            serviceType="Philippine Science High School"
+          />
         </ScrollView>
       </View>
     );
@@ -67,20 +89,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around'
+    justifyContent: 'space-around',
   },
   serviceTypeText: {
     fontSize: 10,
     fontFamily: 'Roboto Mono',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   serviceTutorialText: {
     fontSize: 32,
     fontFamily: 'Roboto Mono',
     textAlign: 'center',
     fontWeight: 'bold',
-    color: '#2b2b2b'
-  }
+    color: '#2b2b2b',
+  },
 });
 
 export default Services;

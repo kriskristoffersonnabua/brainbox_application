@@ -16,7 +16,7 @@ import {
   getAllTutors,
   getUserInformation,
   getTutorSched,
-  getTutor
+  getTutor,
 } from './resourcesActions';
 
 export default (Actions = {
@@ -33,5 +33,5 @@ export default (Actions = {
   goToAccountSettingsEdit,
   updateUserInfo,
   getTutorSched,
-  getTutor
+  getTutor,
 });

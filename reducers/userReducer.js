@@ -7,14 +7,13 @@ export default function(state = initialState, action) {
     case types.LOGGED_IN_USER:
       return {
         ...state,
-        authToken: action.payload,
-        landingPage: 'UserDashboard'
+        landingPage: 'UserDashboard',
       };
       break;
     case types.LOGGED_OUT_USER:
       return {
         ...state,
-        landingPage: 'Login'
+        landingPage: 'Login',
       };
       break;
     default:

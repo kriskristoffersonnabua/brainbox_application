@@ -5,13 +5,13 @@ import {signupUser, loginUser, updateUserInformation} from '../lib/api';
 export const loggedInUser = () => {
   return dispatch => {
     AsyncStorage.getItem('bboxAuthToken').then(authToken => {
-      if(authToken != null){
+      console.log('currently logged in user:', authToken);
+      if (authToken != undefined) {
         dispatch({
           type: types.LOGGED_IN_USER,
           payload: authToken,
         });
-      }
-      else {
+      } else {
         dispatch({
           type: types.LOGGED_OUT_USER,
         });
@@ -36,10 +36,8 @@ export const signupUserAction = body => {
 export const signoutUser = () => {
   return async dispatch => {
     await AsyncStorage.removeItem('bboxAuthToken');
-    const authToken = false;
     dispatch({
       type: types.LOGGED_OUT_USER,
-      payload: authToken,
     });
   };
 };
@@ -63,7 +61,6 @@ export const authenticateUser = body => {
       await AsyncStorage.setItem('bboxUserId', response.userId);
       dispatch({
         type: types.LOGGED_IN_USER,
-        payload: response.authToken,
       });
     } else {
       Alert.alert(response.error);

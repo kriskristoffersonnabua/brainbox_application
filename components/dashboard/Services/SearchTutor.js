@@ -1,6 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {View, StyleSheet, TouchableOpacity, Text, ScrollView} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+} from 'react-native';
 import LocalImage from '../../reusables/LocalImage';
 import {windowDimensions} from '../../../lib/device';
 import Button from '../../reusables/Button';
@@ -11,12 +17,16 @@ import Dash from 'react-native-dash';
 class SearchTutor extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      timeString: '',
+      dateString: '',
+    };
   }
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.backButtonContainer}>
-          <TouchableOpacity style={styles.backButton}>
+          <TouchableOpacity onPress={this.props.back} style={styles.backButton}>
             <LocalImage
               source={require('../../../assets/images/icons/backButton.png')}
               resize
@@ -28,32 +38,89 @@ class SearchTutor extends Component {
         </View>
         <View elevation={2} style={styles.searchSection}>
           <View style={styles.searchFieldHeader}>
-            <Text style={{
-              fontSize: 12,
-              fontWeight: 'bold',
-              color: '#2b2b2b',
-              fontFamily: 'RobotoMono',
-            }}>Search Available Tutor:</Text>
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: 'bold',
+                color: '#2b2b2b',
+                fontFamily: 'RobotoMono',
+              }}>
+              Search Available Tutor:
+            </Text>
           </View>
-          <Dash style={{width: 310, height: 2}} dashLength={5} dashGap={5} dashColor={'#979797'}/>
+          <Dash
+            style={{width: 310, height: 2}}
+            dashLength={5}
+            dashGap={5}
+            dashColor={'#979797'}
+          />
           <View style={{flex: 1}}>
-            <TextField style={{marginBottom: -5, fontSize: 10}} width={290} placeholder="Tutor Name" onChangeText={()=>{}} />
+            <TextField
+              style={{marginBottom: -5, fontSize: 10}}
+              width={290}
+              placeholder="Tutor Name"
+              onChangeText={value => {
+                this.setState({tutorName: value});
+              }}
+            />
             <View style={{flexDirection: 'row'}}>
-              <TextField width={150} placeholder="Subject" onChangeText={()=>{}} />
-              <TextField width={67} placeholder="Time" onChangeText={()=>{}} />
-              <TextField width={67} placeholder="Date" onChangeText={()=>{}} />
+              <TextField
+                width={150}
+                placeholder="Subject"
+                onChangeText={value => {
+                  this.setState({subject: value});
+                }}
+              />
+              <TextField
+                width={67}
+                timepicker
+                focusCallback={({newTime, newTimeString}) => {
+                  this.setState({time: newTime, timeString: newTimeString});
+                }}
+                placeholder="Time"
+                onChangeText={value => {
+                  this.setState({time});
+                }}
+                value={this.state.timeString}
+              />
+              <TextField
+                width={67}
+                datepicker
+                focusCallback={({newDate, newDateString}) => {
+                  this.setState({date: newDate, dateString: newDateString});
+                }}
+                placeholder="Date"
+                onChangeText={() => {}}
+                value={this.state.dateString}
+              />
             </View>
-            <Button style={{alignSelf: 'center'}}type="confirm" text="Search" width={95} height={40}/>
+            <Button
+              style={{alignSelf: 'center'}}
+              type="confirm"
+              text="Search"
+              width={95}
+              height={40}
+            />
           </View>
         </View>
-        <View style={{paddingRight: 20, paddingLeft: 20, flex: 1, justifyContent: 'flex-start', alignItems: 'center'}}>
-          <Text style={{
-            margin: 10
-          }}>Results:</Text>
+        <View
+          style={{
+            paddingRight: 20,
+            paddingLeft: 20,
+            flex: 1,
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              margin: 10,
+            }}>
+            Results:
+          </Text>
           <ScrollView style={{width: '100%', paddingTop: 10}}>
-            <TutorCard tutorName="Kris Kristofferson" available/>
-            <TutorCard tutorName="Kris Kristofferson" available/>
-            <TutorCard tutorName="Kris Kristofferson" available/>
+            <TutorCard tutorName="Kris Kristofferson" available />
+            <TutorCard tutorName="Kris Kristofferson" available />
+            <TutorCard tutorName="Kris Kristofferson" available />
             <TutorCard tutorName="Kris Kristofferson Nabue" />
             <TutorCard tutorName="Kris Kristofferson Nabue" />
             <TutorCard tutorName="Kris Kristofferson Nabue" />
@@ -70,7 +137,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: '#fff',
-    padding: 10
+    padding: 10,
   },
   backButtonContainer: {
     width: '100%',
@@ -88,7 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     marginTop: 5,
     borderRadius: 5,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   searchFieldHeader: {
     height: 40,

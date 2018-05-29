@@ -1,7 +1,12 @@
 import * as types from './types';
-import {allTutors, getLoginUserInformation, getTutorSchedule, getTutorInformation} from '../lib/api';
+import {
+  allTutors,
+  getLoginUserInformation,
+  getTutorSchedule,
+  getTutorInformation,
+} from '../lib/api';
 
-export const getTutor= tutorId => {
+export const getTutor = tutorId => {
   return async dispatch => {
     const tutorInformation = await getTutorInformation(tutorId);
     dispatch({
@@ -14,10 +19,12 @@ export const getTutor= tutorId => {
 export const getUserInformation = () => {
   return async dispatch => {
     const userInformation = await getLoginUserInformation();
-    dispatch({
-      type: types.ME_INFO,
-      payload: userInformation,
-    });
+    if (userInformation) {
+      dispatch({
+        type: types.ME_INFO,
+        payload: userInformation,
+      });
+    } else return;
   };
 };
 
@@ -30,7 +37,7 @@ export const getTutorSched = () => {
       payload: tutorSchedule,
     });
   };
-}
+};
 
 export const getAllTutors = () => {
   return async dispatch => {

@@ -14,7 +14,7 @@ import Dash from 'react-native-dash';
 class SubmitFeedbackModal extends Component {
   state = {
     rating: 5,
-  }
+  };
   render() {
     return (
       <Modal
@@ -67,114 +67,119 @@ class SubmitFeedbackModal extends Component {
                 padding: 5,
               }}>
               <TouchableOpacity
-                onPress={()=>this.setState({rating: 1})}
+                onPress={() => this.setState({rating: 1})}
                 style={{
                   borderRadius: 5,
                   width: 50,
                   height: 50,
-                }}
-              >
-                {this.state.rating >=1 ? 
-                  <LocalImage 
+                }}>
+                {this.state.rating >= 1 ? (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/fullstar.png')}
-                  />:
-                  <LocalImage 
+                  />
+                ) : (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/emptystar.png')}
-                  />}
+                  />
+                )}
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={()=>this.setState({rating: 2})}
+                onPress={() => this.setState({rating: 2})}
                 style={{
                   borderRadius: 5,
                   width: 50,
                   height: 50,
-                }}
-              >
-                {this.state.rating >=2 ? 
-                  <LocalImage 
+                }}>
+                {this.state.rating >= 2 ? (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/fullstar.png')}
-                  />:
-                  <LocalImage 
+                  />
+                ) : (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/emptystar.png')}
-                  />}
+                  />
+                )}
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={()=>this.setState({rating: 3})}
+                onPress={() => this.setState({rating: 3})}
                 style={{
                   borderRadius: 5,
                   width: 50,
                   height: 50,
-                }}
-              >
-                {this.state.rating >=3 ? 
-                  <LocalImage 
+                }}>
+                {this.state.rating >= 3 ? (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/fullstar.png')}
-                  />:
-                  <LocalImage 
+                  />
+                ) : (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/emptystar.png')}
-                  />}
+                  />
+                )}
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={()=>this.setState({rating: 4})}
+                onPress={() => this.setState({rating: 4})}
                 style={{
                   borderRadius: 5,
                   width: 50,
                   height: 50,
-                }}
-              >
-                {this.state.rating >=4 ? 
-                  <LocalImage 
+                }}>
+                {this.state.rating >= 4 ? (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/fullstar.png')}
-                  />:
-                  <LocalImage 
+                  />
+                ) : (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/emptystar.png')}
-                  />}
+                  />
+                )}
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={()=>this.setState({rating: 5})}
+                onPress={() => this.setState({rating: 5})}
                 style={{
                   borderRadius: 5,
                   width: 50,
                   height: 50,
-                }}
-              >
-                {this.state.rating >=5 ? 
-                  <LocalImage 
+                }}>
+                {this.state.rating >= 5 ? (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/fullstar.png')}
-                  />:
-                  <LocalImage 
+                  />
+                ) : (
+                  <LocalImage
                     resize
                     newWidth={50}
                     newHeight={50}
                     source={require('../../../assets/images/icons/emptystar.png')}
-                  />}
+                  />
+                )}
               </TouchableOpacity>
             </View>
             <Button
@@ -243,14 +248,18 @@ class BookedTutorial extends Component {
   }
   _toggleFeedbackModal = () => {
     this.setState({feedbackModal: !this.state.feedbackModal});
-  }
+  };
   render() {
     return (
       <ScrollView
         style={{
           width: '100%',
         }}>
-        <SubmitFeedbackModal toggleFeedbackModal={this._toggleFeedbackModal} feedbackModal={this.state.feedbackModal}/>
+        <SubmitFeedbackModal
+          cancelFeedbackModal={() => {}}
+          toggleFeedbackModal={this._toggleFeedbackModal}
+          feedbackModal={this.state.feedbackModal}
+        />
         <View style={styles.container}>
           <View
             style={{

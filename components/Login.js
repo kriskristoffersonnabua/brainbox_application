@@ -11,7 +11,7 @@ import {
 import {Button, TextField} from './reusables';
 import {connect} from 'react-redux';
 import Actions from '../actions';
-const {goToSignupPage, authenticateUser} = Actions;
+const {goToSignupPage, authenticateUser, getLoginUserInformation} = Actions;
 
 class Login extends React.Component {
   constructor(props) {
@@ -56,6 +56,7 @@ class Login extends React.Component {
     let data = this.state;
     try {
       this.props.authenticateUser(data);
+      this.props.getLoginUserInformation();
     } catch (exception) {
       console.log(exception);
     }
@@ -87,4 +88,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(null, {goToSignupPage, authenticateUser})(Login);
+export default connect(null, {
+  goToSignupPage,
+  authenticateUser,
+  getLoginUserInformation,
+})(Login);

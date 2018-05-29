@@ -12,30 +12,30 @@ import LocalImage from './LocalImage';
 import {windowDimensions} from '../../lib/device';
 import {connect} from 'react-redux';
 import Actions from '../../actions';
-const {signoutUser,goToAccountSettings} = Actions;
+const {signoutUser, goToAccountSettings} = Actions;
 
 const MenuItem = props => {
   return (
-    <TouchableOpacity 
-      onPress={props.onPress} 
+    <TouchableOpacity
+      onPress={props.onPress}
       elevated={5}
       style={{
         width: windowDimensions.width,
         height: 30,
-        backgroundColor: "#cecece",
+        backgroundColor: '#cecece',
         shadowOpacity: 1,
         alignItems: 'center',
         padding: 5,
       }}>
       <Text>{props.text}</Text>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 class Header extends React.Component {
   state = {
-    openMenu: false
-  }
+    openMenu: false,
+  };
   render() {
     let maxHeight;
     if (this.state.openMenu) {
@@ -44,11 +44,12 @@ class Header extends React.Component {
       maxHeight = 70;
     }
     return (
-      <View style={{
-        flex: 1,
-        justifyContent: 'flex-start',
-        maxHeight
-      }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'flex-start',
+          maxHeight,
+        }}>
         <View style={styles.headerBar}>
           <TouchableOpacity onPress={this._toggleMenu}>
             <LocalImage
@@ -66,16 +67,19 @@ class Header extends React.Component {
           />
         </View>
         <View>
-          <MenuItem text={"Account Settings"} onPress={this.props.goToAccountSettings}/>
-          <MenuItem text={"Help"} onPress={()=>{}}/>
-          <MenuItem text={"Logout"} onPress={this.props.signoutUser}/>
+          <MenuItem
+            text={'Account Settings'}
+            onPress={this.props.goToAccountSettings}
+          />
+          <MenuItem text={'Help'} onPress={() => {}} />
+          <MenuItem text={'Logout'} onPress={this.props.signoutUser} />
         </View>
       </View>
     );
   }
-  _toggleMenu = (event) => {
-    this.setState({openMenu: !this.state.openMenu})
-  }
+  _toggleMenu = event => {
+    this.setState({openMenu: !this.state.openMenu});
+  };
 }
 
 const styles = StyleSheet.create({
@@ -92,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(null,{signoutUser,goToAccountSettings})(Header);
+export default connect(null, {signoutUser, goToAccountSettings})(Header);

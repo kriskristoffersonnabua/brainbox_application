@@ -18,11 +18,7 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import Actions from '../../actions';
-const {
-  getUserInformation,
-  goToAccountSettings,
-  updateUserInfo
-} = Actions;
+const {getUserInformation, goToAccountSettings, updateUserInfo} = Actions;
 
 class ClientAccountSettingsEdit extends Component {
   constructor(props) {
@@ -36,27 +32,27 @@ class ClientAccountSettingsEdit extends Component {
       isMale: false,
     };
   }
-  componentWillMount(){
+  componentWillMount() {
     this.props.getUserInformation();
   }
   componentWillReceiveProps(nextProps) {
     const {user} = nextProps;
     if (user) {
-      if(user.user.birthday){
+      if (user.user.birthday) {
         birthday = new Date(user.user.birthday);
         data = birthday.toString().split(' ');
         console.log(birthday, data);
-        birthdayString  = `${data[1]} ${data[2]}, ${data[3]}`;
+        birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
       }
       this.setState({
         firstname: user.user.firstname,
         lastname: user.user.lastname,
         email: user.user.email,
         address: user.user.address,
-        contact: user.user.contact+'',
-        isMale:  user.user.gender == 0? true: false,
+        contact: user.user.contact + '',
+        isMale: user.user.gender == 0 ? true : false,
         birthday: (user.user.birthday && birthday) || null,
-        birthdayString: (user.user.birthday && birthdayString) || ''
+        birthdayString: (user.user.birthday && birthdayString) || '',
       });
     }
   }
@@ -235,7 +231,7 @@ class ClientAccountSettingsEdit extends Component {
     //sanitize data
     let data = this.state;
     delete data['accountType'];
-    data.gender = data.isMale ? 0: 1;
+    data.gender = data.isMale ? 0 : 1;
     delete data['isMale'];
     delete data['birthdayString'];
 
@@ -261,5 +257,5 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   getUserInformation,
   goToAccountSettings,
-  updateUserInfo
+  updateUserInfo,
 })(ClientAccountSettingsEdit);
