@@ -17,7 +17,7 @@ import Config from 'react-native-config';
 
 import {connect} from 'react-redux';
 import Actions from '../actions';
-const { goToLoginPage, signupUserAction } = Actions;
+const {goToLoginPage, signupUserAction} = Actions;
 
 class Signup extends React.Component {
   constructor(props) {
@@ -164,7 +164,7 @@ class Signup extends React.Component {
         });
     }
   };
-  submitData = async event => {
+  submitData = event => {
     let data = this.state;
     data = _.omit(data, [
       'month',
@@ -176,6 +176,7 @@ class Signup extends React.Component {
     //verify data
     //sanitize data
     //submit data wait for auth token
+    console.log(data);
     try {
       this.props.signupUserAction(data);
     } catch (exception) {
@@ -192,4 +193,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(null,{goToLoginPage,signupUserAction})(Signup);
+export default connect(null, {goToLoginPage, signupUserAction})(Signup);

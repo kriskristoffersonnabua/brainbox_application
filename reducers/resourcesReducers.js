@@ -13,18 +13,27 @@ export default function(state = initialState, action) {
     case types.ME_INFO:
       return {
         ...state,
-        user: action.payload
-      }
+        user: action.payload,
+      };
+      break;
     case types.TUTOR_SCHEDULE:
       return {
         ...state,
-        schedule: action.payload
-      }
+        schedule: action.payload,
+      };
+      break;
     case types.USER_INFO:
       return {
         ...state,
-        user: action.payload
-      }
+        user: action.payload,
+      };
+      break;
+    case types.SEARCHED_TUTORS:
+      return {
+        ...state,
+        tutors: action.payload,
+      };
+      break;
     default:
       return state;
   }

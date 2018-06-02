@@ -19,6 +19,7 @@ import {
 import TutorSchedule from './TutorSchedule';
 import {connect} from 'react-redux';
 import Actions from '../../actions';
+import {insertTutorSchedule, parseTutorSchedule} from '../../lib/converter';
 const {getUserInformation, updateUserInfo, goToAccountSettings} = Actions;
 
 class TutorAccountSettingsEdit extends Component {
@@ -37,16 +38,49 @@ class TutorAccountSettingsEdit extends Component {
     this.props.getUserInformation();
   }
   componentWillReceiveProps(nextProps) {
-    const {user} = nextProps;
+    const {user} = this.props;
+    console.log(user);
     if (user) {
       let birthday;
       let birthdayString;
       if (user.user.birthday) {
         birthday = new Date(user.user.birthday);
         data = birthday.toString().split(' ');
-        console.log(birthday, data);
         birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
       }
+      const sched = user.user.schedule;
+      let parsedSched = {
+        a: sched[0],
+        aSchedule: parseTutorSchedule(sched[0]),
+        b: sched[1],
+        bSchedule: parseTutorSchedule(sched[1]),
+        c: sched[2],
+        cSchedule: parseTutorSchedule(sched[2]),
+        e: sched[3],
+        eSchedule: parseTutorSchedule(sched[3]),
+        d: sched[4],
+        dSchedule: parseTutorSchedule(sched[4]),
+        f: sched[5],
+        fSchedule: parseTutorSchedule(sched[5]),
+        g: sched[6],
+        gSchedule: parseTutorSchedule(sched[6]),
+        h: sched[7],
+        hSchedule: parseTutorSchedule(sched[7]),
+        i: sched[8],
+        iSchedule: parseTutorSchedule(sched[8]),
+        j: sched[9],
+        jSchedule: parseTutorSchedule(sched[9]),
+        k: sched[10],
+        kSchedule: parseTutorSchedule(sched[10]),
+        l: sched[11],
+        lSchedule: parseTutorSchedule(sched[11]),
+        m: sched[12],
+        mSchedule: parseTutorSchedule(sched[12]),
+        n: sched[13],
+        nSchedule: parseTutorSchedule(sched[13]),
+        o: sched[14],
+        oSchedule: parseTutorSchedule(sched[14]),
+      };
       this.setState({
         firstname: user.user.firstname,
         lastname: user.user.lastname,
@@ -54,13 +88,15 @@ class TutorAccountSettingsEdit extends Component {
         address: user.user.address,
         contact: user.user.contact,
         subjects: user.user.subjects,
-        schedule: user.user.schedule,
+        newTutorSchedule: parsedSched,
         birthday: (user.user.birthday && birthday) || null,
         birthdayString: (user.user.birthday && birthdayString) || '',
       });
     }
   }
   render() {
+    console.log('edit');
+    console.log(this.state);
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -240,7 +276,10 @@ class TutorAccountSettingsEdit extends Component {
               marginBottom: 10,
             }}
           />
-          <TutorSchedule allTutorSchedule={this._allSchedule} />
+          <TutorSchedule
+            schedule={this.state.newTutorSchedule}
+            allTutorSchedule={this._allSchedule}
+          />
           <Button
             text={'Save'}
             style={{
@@ -255,7 +294,7 @@ class TutorAccountSettingsEdit extends Component {
     );
   }
   _allSchedule = schedule => {
-    this.setState({tutorSchedule: schedule});
+    this.setState({newTutorSchedule: schedule});
   };
   updateUser = () => {
     //sanitize data
@@ -265,16 +304,17 @@ class TutorAccountSettingsEdit extends Component {
     delete data['isMale'];
     delete data['birthdayString'];
 
-    if (this.state.tutorSchedule != undefined) {
+    if (this.state.newTutorSchedule != undefined) {
       let newSchedule = [];
-      Object.keys(this.state.tutorSchedule).map(key => {
-        newSchedule.push(this.state.tutorSchedule[key]);
+      Object.keys(this.state.newTutorSchedule).map(key => {
+        newSchedule.push(this.state.newTutorSchedule[key]);
       });
       data['schedule'] = newSchedule;
       delete data['tutorSchedule'];
+      delete data['newTutorSchedule'];
     }
 
-    console.log('data to save', data);
+    console.log(data);
     this.props.updateUserInfo(data);
   };
 }
@@ -289,7 +329,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    user: state.getUserInformation.user,
+    user: state.ResourcesReducer.user,
   };
 };
 

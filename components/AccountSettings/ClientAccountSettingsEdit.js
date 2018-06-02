@@ -41,7 +41,6 @@ class ClientAccountSettingsEdit extends Component {
       if (user.user.birthday) {
         birthday = new Date(user.user.birthday);
         data = birthday.toString().split(' ');
-        console.log(birthday, data);
         birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
       }
       this.setState({
@@ -235,7 +234,6 @@ class ClientAccountSettingsEdit extends Component {
     delete data['isMale'];
     delete data['birthdayString'];
 
-    console.log('data to update: ', data);
     this.props.updateUserInfo(data);
   };
 }
@@ -250,7 +248,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    user: state.getUserInformation.user,
+    user: state.ResourcesReducer && state.ResourcesReducer.user,
   };
 };
 

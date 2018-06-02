@@ -5,7 +5,7 @@ import {TutorCard} from '../../reusables';
 import {connect} from 'react-redux';
 import Actions from '../../../actions';
 import {TutorAccountSettings} from '../../AccountSettings';
-const {getAllTutors, getUserInformation} = Actions;
+const {getAllTutors} = Actions;
 
 class Tutors extends Component {
   constructor(props) {
@@ -21,6 +21,8 @@ class Tutors extends Component {
     this.setState({tutorId: null});
   };
   render() {
+    console.log('userdashborad');
+    console.log(this.props);
     let component;
     if (this.state.tutorId) {
       component = (
@@ -67,12 +69,11 @@ class Tutors extends Component {
 }
 
 const mapStateToProps = state => {
+  console.log('state');
+  console.log(state);
   return {
-    tutors: state.getAllTutors.tutors,
-    user: state.getUserInformation.user,
+    tutors: state.ResourcesReducers && state.ResourcesReducers.tutors,
   };
 };
 
-export default connect(mapStateToProps, {getAllTutors, getUserInformation})(
-  Tutors,
-);
+export default connect(mapStateToProps, {getAllTutors})(Tutors);

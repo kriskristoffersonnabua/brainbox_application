@@ -2,28 +2,58 @@ import React, {Component} from 'react';
 import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {insertTutorSchedule, parseTutorSchedule} from '../../lib/converter';
 import {String} from '../reusables';
-import {connect} from 'react-redux';
-import Actions from '../../actions';
-const {getTutorSched} = Actions;
+// import {connect} from 'react-redux';
+// import Actions from '../../actions';
+// const {getTutorSched} = Actions;
 
 class TutorSchedule extends Component {
   constructor(props) {
     super(props);
-    let a = '8am-9am:false:false:false:false:false:false:false';
-    let b = '9am-10am:false:false:false:false:false:false:false';
-    let c = '10am-11am:false:false:false:false:false:false:false';
-    let d = '11am-12pm:false:false:false:false:false:false:false';
-    let e = '12pm-1pm:false:false:false:false:false:false:false';
-    let f = '1pm-2pm:false:false:false:false:false:false:false';
-    let g = '2pm-3pm:false:false:false:false:false:false:false';
-    let h = '3pm-4pm:false:false:false:false:false:false:false';
-    let i = '4pm-5pm:false:false:false:false:false:false:false';
-    let j = '5pm-6pm:false:false:false:false:false:false:false';
-    let k = '6pm-7pm:false:false:false:false:false:false:false';
-    let l = '7pm-8pm:false:false:false:false:false:false:false';
-    let m = '8pm-9pm:false:false:false:false:false:false:false';
-    let n = '9pm-10pm:false:false:false:false:false:false:false';
-    let o = '10pm-11am:false:false:false:false:false:false:false';
+    let a =
+      (props.schedule && props.schedule.a) ||
+      '8am-9am:false:false:false:false:false:false:false';
+    let b =
+      (props.schedule && props.schedule.b) ||
+      '9am-10am:false:false:false:false:false:false:false';
+    let c =
+      (props.schedule && props.schedule.c) ||
+      '10am-11am:false:false:false:false:false:false:false';
+    let d =
+      (props.schedule && props.schedule.d) ||
+      '11am-12pm:false:false:false:false:false:false:false';
+    let e =
+      (props.schedule && props.schedule.e) ||
+      '12pm-1pm:false:false:false:false:false:false:false';
+    let f =
+      (props.schedule && props.schedule.f) ||
+      '1pm-2pm:false:false:false:false:false:false:false';
+    let g =
+      (props.schedule && props.schedule.g) ||
+      '2pm-3pm:false:false:false:false:false:false:false';
+    let h =
+      (props.schedule && props.schedule.h) ||
+      '3pm-4pm:false:false:false:false:false:false:false';
+    let i =
+      (props.schedule && props.schedule.i) ||
+      '4pm-5pm:false:false:false:false:false:false:false';
+    let j =
+      (props.schedule && props.schedule.j) ||
+      '5pm-6pm:false:false:false:false:false:false:false';
+    let k =
+      (props.schedule && props.schedule.k) ||
+      '6pm-7pm:false:false:false:false:false:false:false';
+    let l =
+      (props.schedule && props.schedule.l) ||
+      '7pm-8pm:false:false:false:false:false:false:false';
+    let m =
+      (props.schedule && props.schedule.m) ||
+      '8pm-9pm:false:false:false:false:false:false:false';
+    let n =
+      (props.schedule && props.schedule.n) ||
+      '9pm-10pm:false:false:false:false:false:false:false';
+    let o =
+      (props.schedule && props.schedule.o) ||
+      '10pm-11am:false:false:false:false:false:false:false';
     this.state = {
       a,
       aSchedule: parseTutorSchedule(a),
@@ -58,14 +88,13 @@ class TutorSchedule extends Component {
     };
   }
   componentWillMount() {
-    this.props.getTutorSched();
+    // this.props.getTutorSched();
   }
   componentWillReceiveProps(nextProps) {
-    const {schedule, tutorSchedule} = this.props;
-    console.log('new scheduel');
-    console.log(schedule);
-    console.log(tutorSchedule);
-    if (schedule != undefined && schedule != null && schedule.length > 0) {
+    const {schedule, tutorSchedule} = nextProps;
+    console.log('receiviingprosp');
+    console.log(this.props);
+    if (schedule != undefined && schedule != null) {
       const {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o} = schedule;
       this.setState({
         a,
@@ -99,8 +128,9 @@ class TutorSchedule extends Component {
         o,
         oSchedule: parseTutorSchedule(o),
       });
-    } else if (tutorSchedule && tutorSchedule.length > 0) {
-      const {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o} = tutorSchedule;
+    } else if (
+      (tutorSchedule && tutorSchedule.length > 0, tutorSchedule != undefined)
+    ) {
       this.setState({
         a: tutorSchedule[0],
         aSchedule: parseTutorSchedule(tutorSchedule[0]),
@@ -136,6 +166,8 @@ class TutorSchedule extends Component {
     }
   }
   render() {
+    console.log('tutor schedule');
+    console.log(this.props);
     return (
       <View style={styles.container}>
         <View
@@ -6942,10 +6974,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
-  return {
-    tutorSchedule: state.getTutorSched.schedule,
-  };
-};
+// const mapStateToProps = state => {
+//   return {
+//     tutorSchedule: state.ResourcesReducers && state.ResourcesReducers.schedule,
+//   };
+// };
 
-export default connect(mapStateToProps, {getTutorSched})(TutorSchedule);
+export default TutorSchedule;
+// export default connect(mapStateToProps, {getTutorSched})(TutorSchedule);

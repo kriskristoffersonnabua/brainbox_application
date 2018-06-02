@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   ScrollView,
+  Keyboard,
 } from 'react-native';
 import LocalImage from '../../reusables/LocalImage';
 import {windowDimensions} from '../../../lib/device';
@@ -13,16 +14,27 @@ import Button from '../../reusables/Button';
 import TextField from '../../reusables/TextField';
 import TutorCard from '../../reusables/TutorCard';
 import Dash from 'react-native-dash';
+import {connect} from 'react-redux';
+import Actions from '../../../actions';
+const {searchTutor} = Actions;
 
 class SearchTutor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      tutorName: '',
+      subject: '',
       timeString: '',
       dateString: '',
+      tutors: [],
     };
   }
+  componentWillReceiveProps(nextProps) {
+    const {tutors} = this.props;
+    this.setState({tutors});
+  }
   render() {
+    console.log(this.state);
     return (
       <View style={styles.container}>
         <View style={styles.backButtonContainer}>
@@ -100,6 +112,7 @@ class SearchTutor extends Component {
               text="Search"
               width={95}
               height={40}
+              onPress={this.searchTutor}
             />
           </View>
         </View>
@@ -118,17 +131,22 @@ class SearchTutor extends Component {
             Results:
           </Text>
           <ScrollView style={{width: '100%', paddingTop: 10}}>
-            <TutorCard tutorName="Kris Kristofferson" available />
-            <TutorCard tutorName="Kris Kristofferson" available />
-            <TutorCard tutorName="Kris Kristofferson" available />
-            <TutorCard tutorName="Kris Kristofferson Nabue" />
-            <TutorCard tutorName="Kris Kristofferson Nabue" />
-            <TutorCard tutorName="Kris Kristofferson Nabue" />
+            {this.state.tutors != undefined &&
+              this.state.tutors.map(tutor => {
+                console.log('hey');
+                return <TutorCard tutorName="Kris Kristofferson" available />;
+              })}
           </ScrollView>
         </View>
       </View>
     );
   }
+  searchTutor = () => {
+    const {tutorName, subject} = this.state;
+    Keyboard.dismiss();
+    let searchString = `${tutorName} ${subject}`;
+    this.props.searchTutor(searchString);
+  };
 }
 
 const styles = StyleSheet.create({
@@ -165,4 +183,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchTutor;
+const mapStateToProps = state => {
+  return {
+    tutors: state.ResourcesReducers && state.ResourcesReducers.tutors,
+  };
+};
+
+export default connect(mapStateToProps, {
+  searchTutor,
+})(SearchTutor);

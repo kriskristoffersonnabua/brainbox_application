@@ -4,7 +4,19 @@ import {
   getLoginUserInformation,
   getTutorSchedule,
   getTutorInformation,
+  searchByNameAndSubject,
 } from '../lib/api';
+
+export const searchTutor = string => {
+  return async dispatch => {
+    const tutors = await searchByNameAndSubject(string);
+    console.log('tutors', tutors);
+    dispatch({
+      type: types.SEARCHED_TUTORS,
+      payload: tutors,
+    });
+  };
+};
 
 export const getTutor = tutorId => {
   return async dispatch => {
@@ -31,7 +43,6 @@ export const getUserInformation = () => {
 export const getTutorSched = () => {
   return async dispatch => {
     const tutorSchedule = await getTutorSchedule();
-    console.log('from api', tutorSchedule);
     dispatch({
       type: types.TUTOR_SCHEDULE,
       payload: tutorSchedule,

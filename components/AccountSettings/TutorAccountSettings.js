@@ -76,7 +76,6 @@ class TutorAccountSettings extends Component {
       if (user.user.birthday) {
         birthday = new Date(user.user.birthday);
         data = birthday.toString().split(' ');
-        console.log(birthday, data);
         birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
       }
       this.setState({
@@ -237,11 +236,7 @@ class TutorAccountSettings extends Component {
               marginBottom: 10,
             }}
           />
-          <TutorSchedule
-            readOnly
-            schedule={this.state.schedule}
-            allTutorSchedule={this._allSchedule}
-          />
+          <TutorSchedule readOnly schedule={this.state.schedule} />
           {!this.props.tutorId ? (
             <Button
               text={'Edit'}
@@ -273,7 +268,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    user: state.getUserInformation.user || state.getTutor.user,
+    user: state.ResourcesReducer && state.ResourcesReducer.user,
   };
 };
 
