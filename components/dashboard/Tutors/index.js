@@ -4,7 +4,7 @@ import {windowDimensions} from '../../../lib/device';
 import {TutorCard} from '../../reusables';
 import {connect} from 'react-redux';
 import Actions from '../../../actions';
-import {TutorAccountSettings} from '../../AccountSettings';
+import TutorAccountSettings from '../../AccountSettings/TutorAccountSettings';
 const {getAllTutors} = Actions;
 
 class Tutors extends Component {
@@ -21,8 +21,6 @@ class Tutors extends Component {
     this.setState({tutorId: null});
   };
   render() {
-    console.log('userdashborad');
-    console.log(this.props);
     let component;
     if (this.state.tutorId) {
       component = (
@@ -69,10 +67,8 @@ class Tutors extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log('state');
-  console.log(state);
   return {
-    tutors: state.ResourcesReducers && state.ResourcesReducers.tutors,
+    tutors: state.ResourcesReducer && state.ResourcesReducer.tutors,
   };
 };
 

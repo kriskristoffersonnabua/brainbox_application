@@ -26,15 +26,9 @@ class SearchTutor extends Component {
       subject: '',
       timeString: '',
       dateString: '',
-      tutors: [],
     };
   }
-  componentWillReceiveProps(nextProps) {
-    const {tutors} = this.props;
-    this.setState({tutors});
-  }
   render() {
-    console.log(this.state);
     return (
       <View style={styles.container}>
         <View style={styles.backButtonContainer}>
@@ -124,17 +118,25 @@ class SearchTutor extends Component {
             justifyContent: 'flex-start',
             alignItems: 'center',
           }}>
-          <Text
-            style={{
-              margin: 10,
-            }}>
-            Results:
-          </Text>
+          {this.props.searchedTutors != undefined &&
+          this.props.searchedTutors.length > 0 ? (
+            <Text
+              style={{
+                margin: 10,
+              }}>
+              Results:
+            </Text>
+          ) : null}
           <ScrollView style={{width: '100%', paddingTop: 10}}>
-            {this.state.tutors != undefined &&
-              this.state.tutors.map(tutor => {
-                console.log('hey');
-                return <TutorCard tutorName="Kris Kristofferson" available />;
+            {this.props.searchedTutors != undefined &&
+              this.props.searchedTutors.map((tutor, index) => {
+                return (
+                  <TutorCard
+                    key={index}
+                    tutorName="Kris Kristofferson"
+                    available
+                  />
+                );
               })}
           </ScrollView>
         </View>
@@ -142,10 +144,17 @@ class SearchTutor extends Component {
     );
   }
   searchTutor = () => {
-    const {tutorName, subject} = this.state;
     Keyboard.dismiss();
-    let searchString = `${tutorName} ${subject}`;
-    this.props.searchTutor(searchString);
+    const {tutorName, subject, date} = this.state;
+    // if(tutorName !== '' || subject !== '') {
+    //   let searchString = `${tutorName} ${subject}`;
+    //   if(date) {
+    //     this.props.searchTutorByDate(date);
+    //   }
+    //   else {
+    //     this.props.searchTutor(searchString);
+    //   }
+    // }
   };
 }
 
@@ -185,7 +194,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    tutors: state.ResourcesReducers && state.ResourcesReducers.tutors,
+    searchedTutors:
+      state.ResourcesReducer && state.ResourcesReducer.searchedTutors,
   };
 };
 

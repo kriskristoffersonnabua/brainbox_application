@@ -11,18 +11,26 @@ class Main extends Component {
     super(props);
     this.state = {
       selected: null,
+
+      //one-on-one tutorial states
+      // selectedTutorId: null
     };
   }
   render() {
     let component;
     switch (this.state.selected) {
       case Service.OneOnOneTutorial:
+        //TODO: selected tutor show
         component = (
-          <SearchTutor back={() => this.setState({selected: null})} />
+          <SearchTutor
+            selected={this.state.selected}
+            back={() => this.setState({selected: null})}
+          />
         );
         break;
       default:
-        component = <ServicesList callback={i => this.selectService(i)} />;
+        component = <TutorialBooking selected={this.state.selected} />;
+        // component = <ServicesList callback={i => this.selectService(i)} />;
         break;
     }
     return <View style={styles.container}>{component}</View>;

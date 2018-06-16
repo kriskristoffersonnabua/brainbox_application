@@ -39,7 +39,6 @@ class TutorAccountSettingsEdit extends Component {
   }
   componentWillReceiveProps(nextProps) {
     const {user} = this.props;
-    console.log(user);
     if (user) {
       let birthday;
       let birthdayString;
@@ -95,8 +94,6 @@ class TutorAccountSettingsEdit extends Component {
     }
   }
   render() {
-    console.log('edit');
-    console.log(this.state);
     return (
       <ScrollView>
         <View style={styles.container}>
@@ -303,7 +300,6 @@ class TutorAccountSettingsEdit extends Component {
     data.gender = data.isMale ? 0 : 1;
     delete data['isMale'];
     delete data['birthdayString'];
-
     if (this.state.newTutorSchedule != undefined) {
       let newSchedule = [];
       Object.keys(this.state.newTutorSchedule).map(key => {
@@ -313,8 +309,6 @@ class TutorAccountSettingsEdit extends Component {
       delete data['tutorSchedule'];
       delete data['newTutorSchedule'];
     }
-
-    console.log(data);
     this.props.updateUserInfo(data);
   };
 }

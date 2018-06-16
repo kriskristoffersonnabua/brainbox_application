@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
   Text,
+  AsyncStorage,
 } from 'react-native';
 import {windowDimensions} from '../../../../lib/device';
 import {
@@ -25,6 +26,10 @@ import Dash from 'react-native-dash';
 import MapView, {Marker} from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
 import Scheduler from './Scheduler';
+import {getDates, generateBookedSchedules, generateLPR} from './controller';
+import Actions from '../../../../actions';
+const {createAppointmentAction} = Actions;
+import {connect} from 'react-redux';
 
 const Tutee = props => {
   return (
@@ -59,6 +64,28 @@ const Tutee = props => {
         text={`${props.tutee.firstname} ${props.tutee.lastname}`}
         fontSize={11}
       />
+    </TouchableOpacity>
+  );
+};
+
+const CustomSchedule = props => {
+  return (
+    <TouchableOpacity onPress={props.onPress}>
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          padding: 10,
+          borderWidth: 1,
+          borderColor: '#979797',
+          borderRadius: 5,
+          justifyContent: 'space-between',
+          marginBottom: 5,
+        }}>
+        <String text={props.schedule.ottDateString} />
+        <String text={props.schedule.ottTimeString} />
+        <String text={props.schedule.ottHours + ' hour/s.'} />
+      </View>
     </TouchableOpacity>
   );
 };
@@ -103,17 +130,21 @@ class TutorialBooking extends Component {
       ottDateString: '',
       ottTime: null,
       ottTimeString: '',
-      ottHours: null,
+      ottHours: '',
 
       // one week tutorial states
       owtStartDate: null,
       owtStartDateString: '',
       owtEndDate: null,
       owtEndDateString: '',
+      owtSchedule: null,
 
       // one month tutorial states
-      omtDate: null,
-      omtDateString: '',
+      omtStartDate: null,
+      omtStartDateString: '',
+      omtEndDate: null,
+      omtEndDateString: '',
+      omtSchedule: null,
 
       //add new tutee modal
       newTuteeModalVisible: false,
@@ -127,7 +158,6 @@ class TutorialBooking extends Component {
       existingTuteeModalVisible: false,
 
       //tutees
-      tutees: [],
       existingTutees: [
         {
           firstname: 'Kris Kristofferson',
@@ -135,8 +165,55 @@ class TutorialBooking extends Component {
           school: 'Sto. Nino Sped Center',
         },
       ],
+
+      //data
+      tutees: [],
+      customDates: [],
+      tutorId: props.tutorId,
+      //default address if user is choosing center based
+      address: {
+        address:
+          '165 Avenida Veteranos, Downtown, Tacloban City, 6500 Leyte, Philippines',
+        east: 125.00217583029146,
+        latitude: 11.24156750000001,
+        longitude: 125.00101953124998,
+        name: `11°14'29.6"N 125°00'03.7"E`,
+        north: 11.243089380291503,
+        placeID: '7Q3762R2+JCCP',
+        south: 11.240391419708498,
+      },
     };
   }
+  addCustomDate = () => {
+    const {
+      ottDate,
+      ottDateString,
+      ottTime,
+      ottTimeString,
+      ottHours,
+      customDates,
+    } = this.state;
+    customDates.push({
+      ottDate,
+      ottDateString,
+      ottTime,
+      ottTimeString,
+      ottHours,
+    });
+    this.setState({
+      customDates,
+      ottDate: null,
+      ottDateString: '',
+      ottTime: null,
+      ottTimeString: '',
+      ottHours: null,
+    });
+  };
+  popCustomDate = index => {
+    const {customDates} = this.state;
+    customDates.splice(index, 1);
+    this.setState({customDates});
+  };
   openSearchModal() {
     RNGooglePlaces.openPlacePickerModal({
       latitude: 11.241568,
@@ -370,7 +447,22 @@ class TutorialBooking extends Component {
             style={{marginLeft: 10, marginBottom: 10}}
             active={this.state.centerBased}
             text={'Center-based Tutorial'}
-            onPress={() => this.setState({centerBased: true})}
+            onPress={() =>
+              this.setState({
+                centerBased: true,
+                address: {
+                  address:
+                    '165 Avenida Veteranos, Downtown, Tacloban City, 6500 Leyte, Philippines',
+                  east: 125.00217583029146,
+                  latitude: 11.24156750000001,
+                  longitude: 125.00101953124998,
+                  name: `11°14'29.6"N 125°00'03.7"E`,
+                  north: 11.243089380291503,
+                  placeID: '7Q3762R2+JCCP',
+                  south: 11.240391419708498,
+                },
+              })
+            }
           />
           <RadioButton
             style={{marginLeft: 10, marginBottom: 10}}
@@ -446,7 +538,7 @@ class TutorialBooking extends Component {
           <RadioButton
             style={{marginLeft: 10, marginBottom: 10}}
             active={this.state.ott}
-            text={'One-Time Tutorial'}
+            text={'Custom Schedule Tutorial'}
             onPress={() => {
               this.setState({ott: true, owt: false, omt: false});
             }}
@@ -454,64 +546,89 @@ class TutorialBooking extends Component {
           <View
             style={{
               width: '100%',
-              flexDirection: 'row',
               marginBottom: 10,
               paddingLeft: 30,
             }}>
-            <TextField
-              datepicker
-              focusCallback={({newDate: date, newDateString: dateString}) => {
-                this.setState({
-                  ottDate: date,
-                  ottDateString: dateString,
-                  ott: true,
-                  owt: false,
-                  omt: false,
-                });
-              }}
-              placeholder={'Date'}
-              value={this.state.ottDateString}
+            {this.state.customDates.map((schedule, index) => {
+              return (
+                <CustomSchedule
+                  onPress={() => this.popCustomDate(index)}
+                  key={index}
+                  schedule={schedule}
+                />
+              );
+            })}
+            <View
               style={{
-                flex: 3,
-              }}
-            />
-            <TextField
-              placeholder={'Time'}
-              style={{
-                flex: 1,
-              }}
-              timepicker
-              focusCallback={({newTime: time, newTimeString: timeString}) =>
-                this.setState({
-                  ottTime: time,
-                  ottTimeString: timeString,
-                  ott: true,
-                  owt: false,
-                  omt: false,
-                })
-              }
-              value={this.state.ottTimeString}
-            />
-            <TextField
-              placeholder={'Hours'}
-              keyboardType="numeric"
-              onChangeText={value => {
-                this.setState({
-                  ottHours: value,
-                  ott: true,
-                  owt: false,
-                  omt: false,
-                });
-              }}
-              style={{
-                flex: 1,
-              }}
-            />
+                width: '100%',
+                flexDirection: 'row',
+                marginBottom: 10,
+              }}>
+              <TextField
+                datepicker
+                focusCallback={({newDate: date, newDateString: dateString}) => {
+                  this.setState({
+                    ottDate: date,
+                    ottDateString: dateString,
+                    ott: true,
+                    owt: false,
+                    omt: false,
+                  });
+                }}
+                placeholder={'Date'}
+                value={this.state.ottDateString}
+                style={{
+                  flex: 3,
+                }}
+              />
+              <TextField
+                placeholder={'Time'}
+                style={{
+                  flex: 2,
+                }}
+                timepicker
+                focusCallback={({newTime: time, newTimeString: timeString}) =>
+                  this.setState({
+                    ottTime: time,
+                    ottTimeString: timeString,
+                    ott: true,
+                    owt: false,
+                    omt: false,
+                  })
+                }
+                value={this.state.ottTimeString}
+              />
+              <TextField
+                placeholder={'Hours'}
+                keyboardType="numeric"
+                onChangeText={value => {
+                  this.setState({
+                    ottHours: parseInt(value, 10),
+                    ott: true,
+                    owt: false,
+                    omt: false,
+                  });
+                }}
+                style={{
+                  flex: 1,
+                }}
+                value={this.state.ottHours + ''}
+              />
+              <Button
+                onPress={this.addCustomDate}
+                width={90}
+                height={35}
+                fontSize={12}
+                style={{padding: 5, alignSelf: 'flex-end'}}
+                type="confirm"
+                text={'Add Schedule'}
+              />
+            </View>
           </View>
           <RadioButton
             style={{marginLeft: 10, marginBottom: 10}}
             active={this.state.owt}
-            text={'One Week Tutorial'}
+            text={'Weekly Tutorial'}
             onPress={() => {
               this.setState({ott: false, owt: true, omt: false});
             }}
@@ -571,7 +688,7 @@ class TutorialBooking extends Component {
           <RadioButton
             style={{marginLeft: 10, marginBottom: 10}}
             active={this.state.omt}
-            text={'One Month Tutorial'}
+            text={'Monthly Tutorial'}
             onPress={() => {
               this.setState({ott: false, owt: false, omt: true});
             }}
@@ -642,6 +759,7 @@ class TutorialBooking extends Component {
               type="confirm"
               text={'Book'}
               fontSize={12}
+              onPress={this.submitData}
             />
           </View>
         </View>
@@ -674,6 +792,88 @@ class TutorialBooking extends Component {
     tutees.pop(index);
     this.setState({tutees});
   };
+  submitData = () => {
+    if (!(this.state.tutees.length > 0)) {
+      Alert.alert('Please add a tutee.');
+      return;
+    }
+    if (!this.state.ott && !this.state.owt && !this.state.omt) {
+      Alert.alert('Please select schedule.');
+      return;
+    }
+    if (this.state.ott) {
+      if (!(this.state.customDates.length > 0)) {
+        Alert.alert(
+          'You have chosen custom dates. Please input dates to be booked',
+        );
+        return;
+      }
+      //generate booked schedules
+      let bookedSchedules = generateBookedSchedules(
+        'custom',
+        this.state.customDates,
+      );
+      //generate lpr for this appointment
+      let generatedLPR = generateLPR('custom', this.state.customDates);
+      //TODO: change tutorId to dynamic tutorID
+      let appointmentData = {
+        tutees: this.state.tutees,
+        tutorId: '5b10f31621d211577ba1aaaa',
+        address: this.state.address,
+        subjects: this.state.subjects,
+        schedule: this.state.customDates,
+      };
+
+      try {
+        this.props.createAppointmentAction(
+          appointmentData,
+          bookedSchedules,
+          generatedLPR,
+          '5b10f31621d211577ba1aaaa',
+        );
+      } catch (exception) {
+        console.log(exception);
+      }
+    }
+    if (this.state.owt) {
+      if (this.state.owtStartDate == null) {
+        Alert.alert('Please input start date of weekly tutorial.');
+        return;
+      }
+      if (this.state.owtEndDate == null) {
+        Alert.alert('Please input end date of weekly tutorial.');
+        return;
+      }
+      if (this.state.owtSchedule == null) {
+        Alert.alert('Please specify the weekly schedule tutorial.');
+        return;
+      }
+      //generate booked schedules
+      let bookedSchedules = generateBookedSchedules(
+        'weekly',
+        this.state.customDates,
+      );
+      //generate lpr for this appointment
+      let generatedLPR = generateLPR('weekly', this.state.customDates);
+      //TODO: change tutorId to dynamic tutorID
+      console.log(bookedSchedules);
+      console.log(generatedLPR);
+    }
+    if (this.state.omt) {
+      if (this.state.omtStartDate == null) {
+        Alert.alert('Please input start date of monthly tutorial.');
+        return;
+      }
+      if (this.state.omtEndDate == null) {
+        Alert.alert('Please input end date of monthly tutorial.');
+        return;
+      }
+      if (this.state.omtSchedule == null) {
+        Alert.alert('Please specify the weekly schedule tutorial.');
+        return;
+      }
+    }
+  };
 }
 
 const styles = StyleSheet.create({
@@ -704,4 +904,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TutorialBooking;
+// export default TutorialBooking;
+export default connect(null, {
+  createAppointmentAction,
+})(TutorialBooking);

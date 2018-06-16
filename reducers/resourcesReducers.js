@@ -31,7 +31,7 @@ export default function(state = initialState, action) {
     case types.SEARCHED_TUTORS:
       return {
         ...state,
-        tutors: action.payload,
+        searchedTutors: action.payload,
       };
       break;
     default:
