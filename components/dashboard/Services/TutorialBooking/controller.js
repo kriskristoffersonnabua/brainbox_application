@@ -28,7 +28,7 @@ export const generateBookedSchedules = (scheduleType, schedules) => {
     }
     return bookedSchedules;
   } else if (scheduleType === 'weekly') {
-    let bookedSchedule = [];
+    let bookedSchedules = [];
     const {startDate, endDate, schedule} = schedules;
     let dates = getDates(startDate, endDate);
     for (date of dates) {
@@ -41,7 +41,7 @@ export const generateBookedSchedules = (scheduleType, schedules) => {
           let data = {
             date: new Date(newDateWithTime),
             time_start: schedule[date.getDay()].morningTime,
-            duration: schedule[data.getDay()].morningHours,
+            duration: schedule[date.getDay()].morningHours,
           };
           bookedSchedules.push(data);
         }
@@ -52,9 +52,7 @@ export const generateBookedSchedules = (scheduleType, schedules) => {
           let data = {
             date: new Date(newDateWithTime),
             time_start: schedule[date.getDay()].afternoonTime,
-            duration: schedule[data.getDay()].afternoonHours,
-            tutor: tutorId,
-            appointment: appointmentId,
+            duration: schedule[date.getDay()].afternoonHours,
           };
           bookedSchedules.push(data);
         }
@@ -92,41 +90,3 @@ export const generateLPR = (scheduleType, schedules, subjects) => {
     return generatedLPR;
   }
 };
-
-// else if (scheduleType === 'monthly') {
-//   let bookedSchedule = [];
-//   const {startDate, endDate, schedule} = schedules;
-//   let dates = getDates(startDate, endDate);
-//   for (date of dates) {
-//     //if that day of the week is active and have a schedule set by the client
-//     if (schedule[date.getDay()].active) {
-//       // if moring time is not zero then there is schedule in the morning
-//       if (schedule[date.getDay()].morningTime != 0) {
-//         const newDateWithTime =
-//           date.getTime() + schedule[date.getDay()].morningTime;
-//         let data = {
-//           date: new Date(newDateWithTime),
-//           time_start: schedule[date.getDay()].morningTime,
-//           duration: schedule[data.getDay()].morningHours,
-//           tutor: tutorId,
-//           appointment: appointmentId,
-//         };
-//         bookedSchedules.push(data);
-//       }
-//       // if afternoon time is not zero then there is schedule in the afternoon
-//       if (schedule[date.getDay()].afternoonTime != 0) {
-//         const newDateWithTime =
-//           date.getTime() + schedule[date.getDay()].afternoonTime;
-//         let data = {
-//           date: new Date(newDateWithTime),
-//           time_start: schedule[date.getDay()].afternoonTime,
-//           duration: schedule[data.getDay()].afternoonHours,
-//           tutor: tutorId,
-//           appointment: appointmentId,
-//         };
-//         bookedSchedules.push(data);
-//       }
-//     }
-//   }
-//   return bookedSchedules;
-// }

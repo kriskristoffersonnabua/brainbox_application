@@ -19,6 +19,8 @@ import {
   getTutor,
   searchTutor,
   createAppointmentAction,
+  getAllBookedAppointmentsFromTutorId,
+  getAllBookedAppointmentsFromClientId,
 } from './resourcesActions';
 
 export default (Actions = {
@@ -38,4 +40,6 @@ export default (Actions = {
   getTutor,
   searchTutor,
   createAppointmentAction,
+  getAllBookedAppointmentsFromTutorId,
+  getAllBookedAppointmentsFromClientId,
 });

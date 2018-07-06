@@ -135,6 +135,7 @@ class SearchTutor extends Component {
                     key={index}
                     tutorName="Kris Kristofferson"
                     available
+                    onPress={() => this.props.setTutorId(tutor._id)}
                   />
                 );
               })}
@@ -146,15 +147,14 @@ class SearchTutor extends Component {
   searchTutor = () => {
     Keyboard.dismiss();
     const {tutorName, subject, date} = this.state;
-    // if(tutorName !== '' || subject !== '') {
-    //   let searchString = `${tutorName} ${subject}`;
-    //   if(date) {
-    //     this.props.searchTutorByDate(date);
-    //   }
-    //   else {
-    //     this.props.searchTutor(searchString);
-    //   }
-    // }
+    if (tutorName !== '' || subject !== '') {
+      let searchString = `${tutorName} ${subject}`;
+      if (date) {
+        this.props.searchTutorByDate(date);
+      } else {
+        this.props.searchTutor(searchString);
+      }
+    }
   };
 }
 
@@ -193,6 +193,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
+  console.log(state);
   return {
     searchedTutors:
       state.ResourcesReducer && state.ResourcesReducer.searchedTutors,

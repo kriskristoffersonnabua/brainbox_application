@@ -369,14 +369,7 @@ class BookedTutorial extends Component {
     );
   }
 }
-// {this.state.address && (
-//   <Marker
-//   coordinate={{
-//     latitude: this.state.addressObject.latitude,
-//       longitude: this.state.addressObject.longitude,
-//   }}
-//   />
-// )}
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',

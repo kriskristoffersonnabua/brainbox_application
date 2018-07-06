@@ -50,11 +50,15 @@ export const signoutUser = () => {
 
 export const updateUserInfo = body => {
   return async dispatch => {
-    await updateUserInformation(body);
-    dispatch({
-      type: types.LANDING_PAGE,
-      payload: 'AccountSettings',
-    });
+    try {
+      await updateUserInformation(body);
+      dispatch({
+        type: types.LANDING_PAGE,
+        payload: 'AccountSettings',
+      });
+    } catch (exception) {
+      console.log(exception);
+    }
   };
 };
 

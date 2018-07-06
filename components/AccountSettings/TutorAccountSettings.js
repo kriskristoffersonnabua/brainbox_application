@@ -45,50 +45,95 @@ class TutorAccountSettings extends Component {
   }
   componentWillMount() {
     if (this.props.tutorId) {
+      console.log('gettting tutor');
       this.props.getTutor(this.props.tutorId);
     } else {
+      console.log('getting something');
       this.props.getUserInformation();
     }
   }
   componentWillReceiveProps(nextProps) {
-    const {user} = nextProps;
-    if (user) {
-      let newSchedule = {};
-      if (user.user.schedule) {
-        newSchedule.a = user.user.schedule[0];
-        newSchedule.b = user.user.schedule[1];
-        newSchedule.c = user.user.schedule[2];
-        newSchedule.d = user.user.schedule[3];
-        newSchedule.e = user.user.schedule[4];
-        newSchedule.f = user.user.schedule[5];
-        newSchedule.g = user.user.schedule[6];
-        newSchedule.h = user.user.schedule[7];
-        newSchedule.i = user.user.schedule[8];
-        newSchedule.j = user.user.schedule[9];
-        newSchedule.k = user.user.schedule[10];
-        newSchedule.l = user.user.schedule[11];
-        newSchedule.m = user.user.schedule[12];
-        newSchedule.o = user.user.schedule[13];
-        newSchedule.n = user.user.schedule[14];
+    if (this.props.tutorId) {
+      const {tutor} = nextProps;
+      console.log('tutor');
+      if (tutor) {
+        let newSchedule = {};
+        if (tutor.schedule) {
+          newSchedule.a = tutor.schedule[0];
+          newSchedule.b = tutor.schedule[1];
+          newSchedule.c = tutor.schedule[2];
+          newSchedule.d = tutor.schedule[3];
+          newSchedule.e = tutor.schedule[4];
+          newSchedule.f = tutor.schedule[5];
+          newSchedule.g = tutor.schedule[6];
+          newSchedule.h = tutor.schedule[7];
+          newSchedule.i = tutor.schedule[8];
+          newSchedule.j = tutor.schedule[9];
+          newSchedule.k = tutor.schedule[10];
+          newSchedule.l = tutor.schedule[11];
+          newSchedule.m = tutor.schedule[12];
+          newSchedule.o = tutor.schedule[13];
+          newSchedule.n = tutor.schedule[14];
+        }
+        let birthday;
+        let birthdayString;
+        if (tutor.birthday) {
+          birthday = new Date(tutor.birthday);
+          data = birthday.toString().split(' ');
+          birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
+        }
+        this.setState({
+          firstname: tutor.firstname,
+          lastname: tutor.lastname,
+          email: tutor.email,
+          address: tutor.address,
+          contact: tutor.contact,
+          subjects: tutor.subjects,
+          schedule: newSchedule,
+          birthday: (tutor.birthday && birthday) || null,
+          birthdayString: (tutor.birthday && birthdayString) || '',
+        });
+      } else {
+        const {user} = nextProps;
+        if (user) {
+          let newSchedule = {};
+          if (user.schedule) {
+            newSchedule.a = user.schedule[0];
+            newSchedule.b = user.schedule[1];
+            newSchedule.c = user.schedule[2];
+            newSchedule.d = user.schedule[3];
+            newSchedule.e = user.schedule[4];
+            newSchedule.f = user.schedule[5];
+            newSchedule.g = user.schedule[6];
+            newSchedule.h = user.schedule[7];
+            newSchedule.i = user.schedule[8];
+            newSchedule.j = user.schedule[9];
+            newSchedule.k = user.schedule[10];
+            newSchedule.l = user.schedule[11];
+            newSchedule.m = user.schedule[12];
+            newSchedule.o = user.schedule[13];
+            newSchedule.n = user.schedule[14];
+          }
+          let birthday;
+          let birthdayString;
+          if (user.birthday) {
+            birthday = new Date(user.birthday);
+            data = birthday.toString().split(' ');
+            birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
+          }
+          this.setState({
+            firstname: user.firstname,
+            lastname: user.lastname,
+            email: user.email,
+            address: user.address,
+            contact: user.contact,
+            subjects: user.subjects,
+            schedule: newSchedule,
+            birthday: (user.birthday && birthday) || null,
+            birthdayString: (user.birthday && birthdayString) || '',
+          });
+        }
       }
-      let birthday;
-      let birthdayString;
-      if (user.user.birthday) {
-        birthday = new Date(user.user.birthday);
-        data = birthday.toString().split(' ');
-        birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
-      }
-      this.setState({
-        firstname: user.user.firstname,
-        lastname: user.user.lastname,
-        email: user.user.email,
-        address: user.user.address,
-        contact: user.user.contact,
-        subjects: user.user.subjects,
-        schedule: newSchedule,
-        birthday: (user.user.birthday && birthday) || null,
-        birthdayString: (user.user.birthday && birthdayString) || '',
-      });
     }
   }
   render() {
@@ -252,9 +297,6 @@ class TutorAccountSettings extends Component {
       </ScrollView>
     );
   }
-  _allSchedule = schedule => {
-    this.setState({tutorSchedule: schedule});
-  };
 }
 
 const styles = StyleSheet.create({
@@ -269,6 +311,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     user: state.ResourcesReducer && state.ResourcesReducer.user,
+    tutor: state.ResourceReducer && state.ResourceReducer.tutor,
   };
 };
 

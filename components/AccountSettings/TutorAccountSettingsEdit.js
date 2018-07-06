@@ -40,14 +40,16 @@ class TutorAccountSettingsEdit extends Component {
   componentWillReceiveProps(nextProps) {
     const {user} = this.props;
     if (user) {
+      console.log('user', user);
       let birthday;
       let birthdayString;
-      if (user.user.birthday) {
-        birthday = new Date(user.user.birthday);
+      if (user.birthday) {
+        birthday = new Date(user.birthday);
         data = birthday.toString().split(' ');
         birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
       }
-      const sched = user.user.schedule;
+      const sched = user.schedule;
+      console.log('USER SCHED', sched);
       let parsedSched = {
         a: sched[0],
         aSchedule: parseTutorSchedule(sched[0]),
@@ -80,16 +82,19 @@ class TutorAccountSettingsEdit extends Component {
         o: sched[14],
         oSchedule: parseTutorSchedule(sched[14]),
       };
+      console.log(user);
       this.setState({
-        firstname: user.user.firstname,
-        lastname: user.user.lastname,
-        email: user.user.email,
-        address: user.user.address,
-        contact: user.user.contact,
-        subjects: user.user.subjects,
-        newTutorSchedule: parsedSched,
-        birthday: (user.user.birthday && birthday) || null,
-        birthdayString: (user.user.birthday && birthdayString) || '',
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        address: user.address,
+        contact: user.contact,
+        subjects: user.subjects,
+        isMale: user.gender ? false : true,
+        newTutorSchedule:
+          parsedSched && parsedSched.a == undefined ? {} : parsedSched,
+        birthday: (user.birthday && birthday) || null,
+        birthdayString: (user.birthday && birthdayString) || '',
       });
     }
   }
@@ -303,12 +308,14 @@ class TutorAccountSettingsEdit extends Component {
     if (this.state.newTutorSchedule != undefined) {
       let newSchedule = [];
       Object.keys(this.state.newTutorSchedule).map(key => {
-        newSchedule.push(this.state.newTutorSchedule[key]);
+        if (key.search(/schedule/i) == -1)
+          newSchedule.push(this.state.newTutorSchedule[key]);
       });
       data['schedule'] = newSchedule;
-      delete data['tutorSchedule'];
-      delete data['newTutorSchedule'];
     }
+    delete data['tutorSchedule'];
+    delete data['newTutorSchedule'];
+    console.log(data);
     this.props.updateUserInfo(data);
   };
 }

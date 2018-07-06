@@ -94,7 +94,7 @@ class TutorSchedule extends Component {
     const {schedule, tutorSchedule} = nextProps;
     console.log('receiviingprosp');
     console.log(this.props);
-    if (schedule != undefined && schedule != null) {
+    if (schedule != undefined && schedule != null && schedule.a != undefined) {
       const {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o} = schedule;
       this.setState({
         a,
@@ -166,8 +166,6 @@ class TutorSchedule extends Component {
     }
   }
   render() {
-    console.log('tutor schedule');
-    console.log(this.props);
     return (
       <View style={styles.container}>
         <View

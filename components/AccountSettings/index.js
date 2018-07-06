@@ -7,6 +7,7 @@ import ClientAccountSettings from './ClientAccountSettings';
 import {connect} from 'react-redux';
 import Actions from '../../actions';
 const {getUserInformation} = Actions;
+import LoadingPage from '../reusables/LoadingPage.js';
 
 class AccountSettings extends React.Component {
   constructor(props) {
@@ -14,7 +15,7 @@ class AccountSettings extends React.Component {
     this.state = {};
   }
   componentWillMount() {
-    const authToken = AsyncStorage.getItem('bboxAuthToken').then(authToken => {
+    AsyncStorage.getItem('bboxAuthToken').then(authToken => {
       if (authToken != undefined && authToken != null) {
         this.props.getUserInformation();
       }
@@ -24,7 +25,7 @@ class AccountSettings extends React.Component {
     let component;
     const {user, edit} = this.props;
     if (user) {
-      switch (user.user.accountType) {
+      switch (user.accountType) {
         case 0:
           component = edit ? (
             <ClientAccountSettingsEdit />
@@ -43,7 +44,7 @@ class AccountSettings extends React.Component {
           break;
       }
     } else {
-      component = <ClientAccountSettings />;
+      component = <LoadingPage />;
     }
     return component;
   }

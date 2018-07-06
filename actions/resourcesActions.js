@@ -10,7 +10,42 @@ import {
   createBookedSchedule,
   createGeneratedLPR,
   insertLPRAndBookedSchedules,
+  getAppointmentsByTutorId,
+  getAppointmentsByClientId,
+  updateUserInformation,
+  getAppointment,
 } from '../lib/api';
+
+// get appointment using the appointmentId given by the applications
+export const getSelectedAppointment = appointmentId => {
+  return async dispatch => {
+    const appointment = await getAppointment(tutorId);
+    dispatch({
+      type: types.SELECTED_APPOINTMENT,
+      payload: appointment,
+    });
+  };
+};
+
+export const getAllBookedAppointmentsFromTutorId = tutorId => {
+  return async dispatch => {
+    const appointments = await getAppointmentsByTutorId(tutorId);
+    dispatch({
+      type: types.BOOKED_TUTORIALS,
+      payload: appointments,
+    });
+  };
+};
+
+export const getAllBookedAppointmentsFromClientId = clientId => {
+  return async dispatch => {
+    const appointments = await getAppointmentsByClientId(clientId);
+    dispatch({
+      type: types.BOOKED_TUTORIALS,
+      payload: appointments,
+    });
+  };
+};
 
 export const createAppointmentAction = (
   appointmentData,
@@ -53,8 +88,14 @@ export const createAppointmentAction = (
       bookedSchedules: createdBookedScheduleIds,
       progressReport: createdLPRIds,
     };
-    let response = await insertLPRAndBookedSchedules(body, appointment._id);
-    //TODO: save tutees to user profile
+    await insertLPRAndBookedSchedules(body, appointment._id);
+
+    //update user tutees list
+    let data = {
+      tutees: appointmentData.tutees,
+    };
+    await updateUserInformation(data);
+
     // dispatch
     dispatch({
       type: types.LANDING_PAGE,
@@ -78,7 +119,7 @@ export const getTutor = tutorId => {
     const tutorInformation = await getTutorInformation(tutorId);
     dispatch({
       type: types.USER_INFO,
-      payload: tutorInformation,
+      payload: tutorInformation.user,
     });
   };
 };
@@ -89,7 +130,7 @@ export const getUserInformation = () => {
     if (userInformation) {
       dispatch({
         type: types.ME_INFO,
-        payload: userInformation,
+        payload: userInformation.user,
       });
     } else return;
   };

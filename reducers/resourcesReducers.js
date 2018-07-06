@@ -34,6 +34,11 @@ export default function(state = initialState, action) {
         searchedTutors: action.payload,
       };
       break;
+    case types.BOOKED_TUTORIALS:
+      return {
+        ...state,
+        appointments: action.payload,
+      };
     default:
       return state;
   }

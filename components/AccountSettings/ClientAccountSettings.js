@@ -1,20 +1,12 @@
 import React, {Component} from 'react';
 import {AccountType} from '../../lib/constants';
-import {
-  Header,
-  String,
-  TextField,
-  Subjects,
-  LocalImage,
-  Button,
-} from '../reusables';
+import {String, Subjects, LocalImage, Button} from '../reusables';
 import {
   ScrollView,
   View,
   StyleSheet,
   TouchableOpacity,
   Text,
-  Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
 import Actions from '../../actions';
@@ -48,19 +40,19 @@ class ClientAccountSettings extends Component {
     if (user) {
       let birthday;
       let birthdayString;
-      if (user.user.birthday) {
-        birthday = new Date(user.user.birthday);
+      if (user.birthday) {
+        birthday = new Date(user.birthday);
         data = birthday.toString().split(' ');
         birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
       }
       this.setState({
-        firstname: user.user.firstname,
-        lastname: user.user.lastname,
-        email: user.user.email,
-        address: user.user.address,
-        contact: user.user.contact,
-        birthday: (user.user.birthday && birthday) || null,
-        birthdayString: (user.user.birthday && birthdayString) || '',
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        address: user.address,
+        contact: user.contact,
+        birthday: (user.birthday && birthday) || null,
+        birthdayString: (user.birthday && birthdayString) || '',
       });
     }
   }

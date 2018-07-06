@@ -9,6 +9,9 @@ import {
 import {LocalImage, String, Button, Subjects} from '../../reusables';
 import MapView, {Marker} from 'react-native-maps';
 import Dash from 'react-native-dash';
+import {connect} from 'react-redux';
+import Actions from '../../../actions';
+const {getAppointment} = Actions;
 
 const Tutee = props => {
   return (
@@ -35,48 +38,48 @@ const Tutee = props => {
 
 const ScheduledBooking = props => {
   return (
-    <View 
+    <View
       elevation={2}
       style={{
-      width: '100%',
-      height: 40,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      borderRadius: 5,
-      paddingLeft: 10,
-      paddingRight: 10,
-      paddingTop: 5,
-      paddingBottom: 5,
-      backgroundColor: '#BDF287'
-    }}>
-    <String text={'4-12-2018'} /> 
-    <String text={'8:30'} /> 
-    <String text={'4 hours'} /> 
+        width: '100%',
+        height: 40,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderRadius: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        paddingTop: 5,
+        paddingBottom: 5,
+        backgroundColor: '#BDF287',
+      }}>
+      <String text={'4-12-2018'} />
+      <String text={'8:30'} />
+      <String text={'4 hours'} />
     </View>
-  )
-}
+  );
+};
 
 class BookedTutorial extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstname: "Kris Kristofferson",
-      lastname: "Nabua",
-      address: "V&G Subdivision, Blk. 2, Phase 4, Tacloban City, Leyte",
-      subjects: ["College Algebra","Science and Health"],
+      firstname: 'Kris Kristofferson',
+      lastname: 'Nabua',
+      address: 'V&G Subdivision, Blk. 2, Phase 4, Tacloban City, Leyte',
+      subjects: ['College Algebra', 'Science and Health'],
       scheduledBookings: [],
       tutees: [
-      {
-        firstname: "Kris",
-        lastname: "Nabua"
-      },
-      {
-        firstname: "Kris",
-        lastname: "Nabua"
-      },
-      ]
-    }
+        {
+          firstname: 'Kris',
+          lastname: 'Nabua',
+        },
+        {
+          firstname: 'Kris',
+          lastname: 'Nabua',
+        },
+      ],
+    };
   }
   render() {
     return (
@@ -137,14 +140,18 @@ class BookedTutorial extends Component {
             dashThickness={1}
             dashColor={'#979797'}
           />
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-            marginBottom: 10
-          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: '100%',
+              marginBottom: 10,
+            }}>
             <String text={'Tutor/s:'} />
-            <String text={`${this.state.firstname} ${this.state.lastname}`} style={{textAlign: 'right'}}/>
+            <String
+              text={`${this.state.firstname} ${this.state.lastname}`}
+              style={{textAlign: 'right'}}
+            />
           </View>
           <Dash
             style={{width: '100%', height: 2, marginBottom: 10}}
@@ -153,12 +160,13 @@ class BookedTutorial extends Component {
             dashThickness={1}
             dashColor={'#979797'}
           />
-          <String text={'Tutee/s:'} style={{marginBottom: 10, alignSelf: 'flex-start'}} />
-          {
-            this.state.tutees.map((tutee, index) => {
-              return <Tutee tutee={tutee} key={index}/>
-            })
-          }
+          <String
+            text={'Tutee/s:'}
+            style={{marginBottom: 10, alignSelf: 'flex-start'}}
+          />
+          {this.state.tutees.map((tutee, index) => {
+            return <Tutee tutee={tutee} key={index} />;
+          })}
           <Dash
             style={{width: '100%', height: 2, marginTop: 10, marginBottom: 10}}
             dashLength={4}
@@ -166,7 +174,10 @@ class BookedTutorial extends Component {
             dashThickness={1}
             dashColor={'#979797'}
           />
-          <String text={'Address:'} style={{marginBottom: 10, alignSelf: 'flex-start'}} />
+          <String
+            text={'Address:'}
+            style={{marginBottom: 10, alignSelf: 'flex-start'}}
+          />
           <String text={this.state.address} style={{marginBottom: 10}} />
           <MapView
             initialRegion={{
@@ -183,8 +194,8 @@ class BookedTutorial extends Component {
             provider="google"
             minZoomLevel={15}
             zoomControlEnabled={true}
-            ref="maps">
-          </MapView>
+            ref="maps"
+          />
           <Dash
             style={{width: '100%', height: 2, marginTop: 10, marginBottom: 10}}
             dashLength={4}
@@ -192,8 +203,15 @@ class BookedTutorial extends Component {
             dashThickness={1}
             dashColor={'#979797'}
           />
-          <String text={'Subjects:'} style={{marginBottom: 10, alignSelf: 'flex-start'}} />
-          <Subjects allSubjects={subjects => this.setState({subjects})} readOnly subjects={this.state.subjects}/>
+          <String
+            text={'Subjects:'}
+            style={{marginBottom: 10, alignSelf: 'flex-start'}}
+          />
+          <Subjects
+            allSubjects={subjects => this.setState({subjects})}
+            readOnly
+            subjects={this.state.subjects}
+          />
           <Dash
             style={{width: '100%', height: 2, marginTop: 10, marginBottom: 10}}
             dashLength={4}
@@ -201,13 +219,17 @@ class BookedTutorial extends Component {
             dashThickness={1}
             dashColor={'#979797'}
           />
-          <String text={'Scheduled Bookings:'} style={{marginBottom: 10, alignSelf: 'flex-start'}} />
-          <View style={{
-            width: '100%',
-            justifyContent: 'flex-start',
-            alignItems: 'center'
-          }}>
-          <ScheduledBooking />
+          <String
+            text={'Scheduled Bookings:'}
+            style={{marginBottom: 10, alignSelf: 'flex-start'}}
+          />
+          <View
+            style={{
+              width: '100%',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}>
+            <ScheduledBooking />
           </View>
         </View>
       </ScrollView>

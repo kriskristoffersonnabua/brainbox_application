@@ -28,7 +28,7 @@ import RNGooglePlaces from 'react-native-google-places';
 import Scheduler from './Scheduler';
 import {getDates, generateBookedSchedules, generateLPR} from './controller';
 import Actions from '../../../../actions';
-const {createAppointmentAction} = Actions;
+const {createAppointmentAction, getUserInformation} = Actions;
 import {connect} from 'react-redux';
 
 const Tutee = props => {
@@ -158,13 +158,7 @@ class TutorialBooking extends Component {
       existingTuteeModalVisible: false,
 
       //tutees
-      existingTutees: [
-        {
-          firstname: 'Kris Kristofferson',
-          lastname: 'Nabua',
-          school: 'Sto. Nino Sped Center',
-        },
-      ],
+      existingTutees: [],
 
       //data
       tutees: [],
@@ -206,7 +200,7 @@ class TutorialBooking extends Component {
       ottDateString: '',
       ottTime: null,
       ottTimeString: '',
-      ottHours: null,
+      ottHours: '',
     });
   };
   popCustomDate = index => {
@@ -214,6 +208,15 @@ class TutorialBooking extends Component {
     customDates.splice(index, 1);
     this.setState({customDates});
   };
+  componentWillReceiveProps(nextProps) {
+    const {user = {}} = nextProps;
+    if (user && user.tutees) {
+      this.setState({existingTutees: user.tutees});
+    }
+  }
+  componentDidMount() {
+    this.props.getUserInformation();
+  }
   openSearchModal() {
     RNGooglePlaces.openPlacePickerModal({
       latitude: 11.241568,
@@ -238,7 +241,9 @@ class TutorialBooking extends Component {
       <ScrollView style={{flex: 1, backgroundColor: 'blue'}}>
         <View style={styles.container}>
           <View style={styles.backButtonContainer}>
-            <TouchableOpacity style={styles.backButton}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={this.props.cancelTutorSelection}>
               <LocalImage
                 source={require('../../../../assets/images/icons/backButton.png')}
                 resize
@@ -255,7 +260,11 @@ class TutorialBooking extends Component {
             style={{padding: 10}}
           />
           <Dash
-            style={{width: windowDimensions.width, height: 2, marginBottom: 10}}
+            style={{
+              width: windowDimensions.width * 0.95,
+              height: 2,
+              marginBottom: 10,
+            }}
             dashLength={5}
             dashGap={5}
             dashColor={'#979797'}
@@ -428,7 +437,7 @@ class TutorialBooking extends Component {
           />
           <Dash
             style={{
-              width: windowDimensions.width,
+              width: windowDimensions.width * 0.95,
               height: 2,
               marginBottom: 10,
               marginTop: 10,
@@ -511,7 +520,11 @@ class TutorialBooking extends Component {
             </MapView>,
           ]}
           <Dash
-            style={{width: windowDimensions.width, height: 2, marginBottom: 10}}
+            style={{
+              width: windowDimensions.width * 0.95,
+              height: 2,
+              marginBottom: 10,
+            }}
             dashLength={5}
             dashGap={5}
             dashColor={'#979797'}
@@ -524,7 +537,11 @@ class TutorialBooking extends Component {
           />
           <Subjects allSubjects={subjects => this.setState({subjects})} />
           <Dash
-            style={{width: windowDimensions.width, height: 2, marginBottom: 10}}
+            style={{
+              width: windowDimensions.width * 0.95,
+              height: 2,
+              marginBottom: 10,
+            }}
             dashLength={5}
             dashGap={5}
             dashColor={'#979797'}
@@ -685,66 +702,6 @@ class TutorialBooking extends Component {
               })
             }
           />
-          <RadioButton
-            style={{marginLeft: 10, marginBottom: 10}}
-            active={this.state.omt}
-            text={'Monthly Tutorial'}
-            onPress={() => {
-              this.setState({ott: false, owt: false, omt: true});
-            }}
-          />
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              marginBottom: 10,
-              paddingLeft: 30,
-            }}>
-            <TextField
-              placeholder={'Start Date'}
-              datepicker
-              focusCallback={({newDate, newDateString}) =>
-                this.setState({
-                  omtStartDate: newDate,
-                  omtStartDateString: newDateString,
-                  ott: false,
-                  owt: false,
-                  omt: true,
-                })
-              }
-              style={{
-                flex: 1,
-              }}
-              value={this.state.omtStartDateString}
-            />
-            <TextField
-              placeholder={'End Date'}
-              datepicker
-              focusCallback={({newDate, newDateString}) =>
-                this.setState({
-                  omtEndDate: newDate,
-                  omtEndDateString: newDateString,
-                  ott: false,
-                  owt: false,
-                  omt: true,
-                })
-              }
-              style={{
-                flex: 1,
-              }}
-              value={this.state.omtEndDateString}
-            />
-          </View>
-          <Scheduler
-            onScheduleChange={schedule =>
-              this.setState({
-                omtSchedule: schedule,
-                ott: false,
-                owt: false,
-                omt: true,
-              })
-            }
-          />
           <View style={styles.cta}>
             <Button
               style={{marginLeft: 10, height: 30}}
@@ -752,6 +709,7 @@ class TutorialBooking extends Component {
               type="cancel"
               text={'Cancel'}
               fontSize={12}
+              onPress={this.props.cancelTutorSelection}
             />
             <Button
               style={{marginLeft: 10, height: 30}}
@@ -793,6 +751,7 @@ class TutorialBooking extends Component {
     this.setState({tutees});
   };
   submitData = () => {
+    const {tutorId} = this.props;
     if (!(this.state.tutees.length > 0)) {
       Alert.alert('Please add a tutee.');
       return;
@@ -815,10 +774,9 @@ class TutorialBooking extends Component {
       );
       //generate lpr for this appointment
       let generatedLPR = generateLPR('custom', this.state.customDates);
-      //TODO: change tutorId to dynamic tutorID
       let appointmentData = {
+        tutorId,
         tutees: this.state.tutees,
-        tutorId: '5b10f31621d211577ba1aaaa',
         address: this.state.address,
         subjects: this.state.subjects,
         schedule: this.state.customDates,
@@ -849,28 +807,31 @@ class TutorialBooking extends Component {
         return;
       }
       //generate booked schedules
-      let bookedSchedules = generateBookedSchedules(
-        'weekly',
-        this.state.customDates,
-      );
+      let bookedSchedules = generateBookedSchedules('weekly', {
+        startDate: this.state.owtStartDate,
+        endDate: this.state.owtEndDate,
+        schedule: this.state.owtSchedule,
+      });
       //generate lpr for this appointment
-      let generatedLPR = generateLPR('weekly', this.state.customDates);
-      //TODO: change tutorId to dynamic tutorID
-      console.log(bookedSchedules);
-      console.log(generatedLPR);
-    }
-    if (this.state.omt) {
-      if (this.state.omtStartDate == null) {
-        Alert.alert('Please input start date of monthly tutorial.');
-        return;
-      }
-      if (this.state.omtEndDate == null) {
-        Alert.alert('Please input end date of monthly tutorial.');
-        return;
-      }
-      if (this.state.omtSchedule == null) {
-        Alert.alert('Please specify the weekly schedule tutorial.');
-        return;
+      let generatedLPR = generateLPR('weekly', bookedSchedules);
+      let appointmentData = {
+        tutorId,
+        tutees: this.state.tutees,
+        address: this.state.address,
+        subjects: this.state.subjects,
+      };
+
+      try {
+        this.props.createAppointmentAction(
+          appointmentData,
+          bookedSchedules,
+          generatedLPR,
+          '5b10f31621d211577ba1aaaa',
+        );
+        //TODO: alert for succesfull creation
+        this.props.cancelTutorSelection();
+      } catch (exception) {
+        console.log(exception);
       }
     }
   };
@@ -904,7 +865,13 @@ const styles = StyleSheet.create({
   },
 });
 
-// export default TutorialBooking;
-export default connect(null, {
+const mapStateToProps = state => {
+  return {
+    user: state.ResourcesReducer.user,
+  };
+};
+
+export default connect(mapStateToProps, {
   createAppointmentAction,
+  getUserInformation,
 })(TutorialBooking);

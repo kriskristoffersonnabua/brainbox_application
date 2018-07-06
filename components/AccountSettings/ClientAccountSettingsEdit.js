@@ -38,20 +38,20 @@ class ClientAccountSettingsEdit extends Component {
   componentWillReceiveProps(nextProps) {
     const {user} = nextProps;
     if (user) {
-      if (user.user.birthday) {
-        birthday = new Date(user.user.birthday);
+      if (user.birthday) {
+        birthday = new Date(user.birthday);
         data = birthday.toString().split(' ');
         birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
       }
       this.setState({
-        firstname: user.user.firstname,
-        lastname: user.user.lastname,
-        email: user.user.email,
-        address: user.user.address,
-        contact: user.user.contact + '',
-        isMale: user.user.gender == 0 ? true : false,
-        birthday: (user.user.birthday && birthday) || null,
-        birthdayString: (user.user.birthday && birthdayString) || '',
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        address: user.address,
+        contact: user.contact + '',
+        isMale: user.gender == 0 ? true : false,
+        birthday: (user.birthday && birthday) || null,
+        birthdayString: (user.birthday && birthdayString) || '',
       });
     }
   }

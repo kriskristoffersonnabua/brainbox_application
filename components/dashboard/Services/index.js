@@ -4,7 +4,8 @@ import {View, StyleSheet} from 'react-native';
 import ServicesList from './ServicesList';
 import SearchTutor from './SearchTutor';
 import TutorialBooking from './TutorialBooking';
-import {Service} from '../../../lib/constants';
+import {Service, AccountType} from '../../../lib/constants';
+import {connect} from 'react-redux';
 
 class Main extends Component {
   constructor(props) {
@@ -13,24 +14,49 @@ class Main extends Component {
       selected: null,
 
       //one-on-one tutorial states
-      // selectedTutorId: null
+      selectedTutorId: false,
     };
   }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      ...nextProps,
+    });
+  }
+  setTutorId = tutorId => this.setState({selectedTutorId: tutorId});
+  cancelTutorSelection = () => this.setState({selectedTutorId: false});
   render() {
     let component;
     switch (this.state.selected) {
       case Service.OneOnOneTutorial:
-        //TODO: selected tutor show
-        component = (
-          <SearchTutor
-            selected={this.state.selected}
-            back={() => this.setState({selected: null})}
-          />
-        );
+        if (this.state.selectedTutorId) {
+          component = (
+            <TutorialBooking
+              cancelTutorSelection={this.cancelTutorSelection}
+              tutorId={this.state.selectedTutorId}
+            />
+          );
+        } else {
+          if (
+            this.props.user &&
+            this.props.user.accountType != AccountType.Admin
+          ) {
+            component = (
+              <SearchTutor
+                setTutorId={this.setTutorId}
+                back={() => this.setState({selected: null})}
+              />
+            );
+          }
+        }
+        break;
+      case Service.CSCExamReview:
+        break;
+      case Service.PSHSExamReview:
+        break;
+      case Service.CEExamReview:
         break;
       default:
-        component = <TutorialBooking selected={this.state.selected} />;
-        // component = <ServicesList callback={i => this.selectService(i)} />;
+        component = <ServicesList callback={i => this.selectService(i)} />;
         break;
     }
     return <View style={styles.container}>{component}</View>;
@@ -46,4 +72,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Main;
+const mapStateToProps = state => {
+  return {
+    user: state.ResourcesReducer.user,
+  };
+};
+
+export default connect(mapStateToProps, {})(Main);
