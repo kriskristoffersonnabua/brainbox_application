@@ -17,12 +17,10 @@ const parseSchedule = bookedSchedules => {
   if (bookedSchedules != undefined && bookedSchedules.length > 0) {
     const startDate = new Date(bookedSchedules[0].date).toString();
     let startDateData = startDate.split(' ');
-    console.log(startDateData);
     const endDate = new Date(
       bookedSchedules[bookedSchedules.length - 1].date,
     ).toString();
     let endDateData = endDate.split(' ');
-    console.log(endDateData);
     return `${startDateData[1]} ${startDateData[2]},${startDateData[3]} - ${
       endDateData[1]
     } ${endDateData[2]},${endDateData[3]}`;
@@ -81,16 +79,17 @@ class Main extends Component {
       //if (review)
       //else if (tutorial)
       //else none
-      <BookedTutorial
-        appointmentId={this.state.bookedIdSelected}
-        clearSelect={this.clearSelect}
-      />;
+      component = (
+        <BookedTutorial
+          appointmentId={this.state.bookedIdSelected}
+          clearSelect={this.clearSelect}
+        />
+      );
     } else {
       const {appointments} = this.props;
       component =
         appointments != undefined &&
         appointments.map(appointment => {
-          console.log(appointment);
           return (
             <BookedCard
               programType={'sample'}
@@ -103,7 +102,6 @@ class Main extends Component {
           );
         });
     }
-    console.log(component);
     return <ScrollView style={styles.container}>{component}</ScrollView>;
   }
 }

@@ -118,8 +118,8 @@ export const getTutor = tutorId => {
   return async dispatch => {
     const tutorInformation = await getTutorInformation(tutorId);
     dispatch({
-      type: types.USER_INFO,
-      payload: tutorInformation.user,
+      type: types.TUTOR_INFO,
+      payload: tutorInformation.tutor,
     });
   };
 };

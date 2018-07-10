@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  console.log(state);
   return {
     searchedTutors:
       state.ResourcesReducer && state.ResourcesReducer.searchedTutors,

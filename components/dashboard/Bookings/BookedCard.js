@@ -6,7 +6,7 @@ import {String, LocalImage} from '../../reusables';
 const BookedCard = props => {
   return (
     <View elevation={2} style={styles.bookedContainer}>
-      <TouchableOpacity style={styles.bookedCard}>
+      <TouchableOpacity style={styles.bookedCard} onPress={props.setIdSelected}>
         <LocalImage
           resize
           source={

@@ -40,7 +40,6 @@ class TutorAccountSettingsEdit extends Component {
   componentWillReceiveProps(nextProps) {
     const {user} = this.props;
     if (user) {
-      console.log('user', user);
       let birthday;
       let birthdayString;
       if (user.birthday) {
@@ -49,7 +48,6 @@ class TutorAccountSettingsEdit extends Component {
         birthdayString = `${data[1]} ${data[2]}, ${data[3]}`;
       }
       const sched = user.schedule;
-      console.log('USER SCHED', sched);
       let parsedSched = {
         a: sched[0],
         aSchedule: parseTutorSchedule(sched[0]),
@@ -82,7 +80,6 @@ class TutorAccountSettingsEdit extends Component {
         o: sched[14],
         oSchedule: parseTutorSchedule(sched[14]),
       };
-      console.log(user);
       this.setState({
         firstname: user.firstname,
         lastname: user.lastname,
@@ -315,7 +312,6 @@ class TutorAccountSettingsEdit extends Component {
     }
     delete data['tutorSchedule'];
     delete data['newTutorSchedule'];
-    console.log(data);
     this.props.updateUserInfo(data);
   };
 }

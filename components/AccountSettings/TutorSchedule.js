@@ -92,8 +92,6 @@ class TutorSchedule extends Component {
   }
   componentWillReceiveProps(nextProps) {
     const {schedule, tutorSchedule} = nextProps;
-    console.log('receiviingprosp');
-    console.log(this.props);
     if (schedule != undefined && schedule != null && schedule.a != undefined) {
       const {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o} = schedule;
       this.setState({

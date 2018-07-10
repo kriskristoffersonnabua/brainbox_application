@@ -22,6 +22,12 @@ export default function(state = initialState, action) {
         schedule: action.payload,
       };
       break;
+    case types.TUTOR_INFO:
+      return {
+        ...state,
+        tutor: action.payload,
+      };
+      break;
     case types.USER_INFO:
       return {
         ...state,

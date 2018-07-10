@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
 import {AccountType} from '../../lib/constants';
+import React, {Component} from 'react';
 import {
   Header,
   String,
@@ -45,17 +45,14 @@ class TutorAccountSettings extends Component {
   }
   componentWillMount() {
     if (this.props.tutorId) {
-      console.log('gettting tutor');
       this.props.getTutor(this.props.tutorId);
     } else {
-      console.log('getting something');
       this.props.getUserInformation();
     }
   }
   componentWillReceiveProps(nextProps) {
     if (this.props.tutorId) {
       const {tutor} = nextProps;
-      console.log('tutor');
       if (tutor) {
         let newSchedule = {};
         if (tutor.schedule) {
