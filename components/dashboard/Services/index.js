@@ -4,8 +4,11 @@ import {View, StyleSheet} from 'react-native';
 import ServicesList from './ServicesList';
 import SearchTutor from './SearchTutor';
 import TutorialBooking from './TutorialBooking';
+import CSCReviewProgram from './CSCReviewProgram';
 import {Service, AccountType} from '../../../lib/constants';
 import {connect} from 'react-redux';
+import Actions from '../../../actions';
+const {selectProgram} = Actions;
 
 class Main extends Component {
   constructor(props) {
@@ -50,6 +53,7 @@ class Main extends Component {
         }
         break;
       case Service.CSCExamReview:
+        component = <CSCReviewProgram />;
         break;
       case Service.PSHSExamReview:
         break;
@@ -62,6 +66,16 @@ class Main extends Component {
     return <View style={styles.container}>{component}</View>;
   }
   selectService = selected => {
+    switch (selected) {
+      case Service.OneOnOneTutorial:
+        break;
+      case Service.CSCExamReview:
+        break;
+      case Service.PSHSExamReview:
+        break;
+      case Service.CEExamReview:
+        break;
+    }
     this.setState({selected});
   };
 }
@@ -78,4 +92,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {})(Main);
+export default connect(mapStateToProps, {selectProgram})(Main);

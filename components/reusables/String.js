@@ -2,25 +2,27 @@ import React from 'react';
 import {Text} from 'react-native';
 const String = props => {
   let fontFamily;
-  if(props.bold){
+  if (props.bold) {
     fontFamily = 'RobotoMonoBold';
-  }
-  else if(props.italic){
+  } else if (props.italic) {
     fontFamily = 'RobotoMonoItalic';
-  }
-  else {
+  } else {
     fontFamily = 'RobotoMonoRegular';
   }
+  const {style, fontSize, textAlign, text, color, ...otherProps} = props;
   return (
     <Text
-      style={[{
-        fontSize: props.fontSize || 10,
-        fontFamily: props.fontFamily || fontFamily,
-        textAlign: props.textAlign || 'center'
-      },props.style]}
-      {...props}
-      >
-      {props.text}
+      style={[
+        {
+          fontSize: fontSize || 10,
+          fontFamily: props.fontFamily || fontFamily,
+          textAlign: textAlign || 'center',
+          color: color || '#2b2b2b',
+        },
+        style,
+      ]}
+      {...otherProps}>
+      {text}
     </Text>
   );
 };

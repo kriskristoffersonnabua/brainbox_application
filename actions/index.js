@@ -21,6 +21,11 @@ import {
   createAppointmentAction,
   getAllBookedAppointmentsFromTutorId,
   getAllBookedAppointmentsFromClientId,
+  selectProgram,
+  getAllPSHSPrograms,
+  getAllCEEPrograms,
+  getAllCSCPrograms,
+  getAllOOOTutorials,
 } from './resourcesActions';
 
 export default (Actions = {
@@ -42,4 +47,9 @@ export default (Actions = {
   createAppointmentAction,
   getAllBookedAppointmentsFromTutorId,
   getAllBookedAppointmentsFromClientId,
+  selectProgram,
+  getAllCEEPrograms,
+  getAllCSCPrograms,
+  getAllOOOTutorials,
+  getAllPSHSPrograms,
 });

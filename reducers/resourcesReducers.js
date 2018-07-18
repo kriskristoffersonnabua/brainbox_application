@@ -45,6 +45,18 @@ export default function(state = initialState, action) {
         ...state,
         appointments: action.payload,
       };
+    case types.PROGRAM_SELECTED:
+      return {
+        ...state,
+        program: action.payload,
+      };
+      break;
+    case types.AVAILABLE_PROGRAMS:
+      return {
+        ...state,
+        availablePrograms: action.payload,
+      };
+      break;
     default:
       return state;
   }

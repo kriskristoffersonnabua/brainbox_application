@@ -14,7 +14,57 @@ import {
   getAppointmentsByClientId,
   updateUserInformation,
   getAppointment,
+  getAllReviewProgramsByType,
 } from '../lib/api';
+
+export const getAllOOOTutorials = () => {
+  return async dispatch => {
+    const availablePrograms = await getAllReviewProgramsByType(0);
+    dispatch({
+      type: types.AVAILABLE_PROGRAMS,
+      payload: availablePrograms,
+    });
+  };
+};
+
+export const getAllCSCPrograms = () => {
+  return async dispatch => {
+    const availablePrograms = await getAllReviewProgramsByType(1);
+    dispatch({
+      type: types.AVAILABLE_PROGRAMS,
+      payload: availablePrograms,
+    });
+  };
+};
+
+export const getAllPSHSPrograms = () => {
+  return async dispatch => {
+    const availablePrograms = await getAllReviewProgramsByType(2);
+    dispatch({
+      type: types.AVAILABLE_PROGRAMS,
+      payload: availablePrograms,
+    });
+  };
+};
+
+export const getAllCEEPrograms = () => {
+  return async dispatch => {
+    const availablePrograms = await getAllReviewProgramsByType(3);
+    dispatch({
+      type: types.AVAILABLE_PROGRAMS,
+      payload: availablePrograms,
+    });
+  };
+};
+
+export const selectProgram = program => {
+  return async dispatch => {
+    dispatch({
+      type: types.PROGRAM_SELECTED,
+      payload: program,
+    });
+  };
+};
 
 // get appointment using the appointmentId given by the applications
 export const getSelectedAppointment = appointmentId => {
