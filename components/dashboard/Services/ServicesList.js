@@ -18,11 +18,6 @@ const Service = props => {
       }}
       style={styles.serviceContainer}>
       <View elevation={2} style={styles.serviceTab}>
-        <LocalImage
-          originalWidth={125}
-          originalHeight={65}
-          source={require('../../../assets/images/1on1tutorial.png')}
-        />
         <View>
           <Text style={styles.serviceTypeText}>{props.serviceType}</Text>
           <Text style={styles.serviceTutorialText}>
@@ -33,6 +28,11 @@ const Service = props => {
     </TouchableOpacity>
   );
 };
+//<LocalImage
+//originalWidth={125}
+//originalHeight={65}
+//source={require('../../../assets/images/1on1tutorial.png')}
+///>
 
 class Services extends Component {
   constructor(props) {

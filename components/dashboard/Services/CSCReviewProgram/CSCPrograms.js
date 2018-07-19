@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, ScrollView, StyleSheet} from 'react-native';
 import {windowDimensions} from '../../../../lib/device';
 // import ProgramsListView from '../ProgramsListView';
+// import ProgramCard from '../ProgramCard';
 
 class CSCPrograms extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class CSCPrograms extends Component {
     let Component;
     if (programs != undefined && !!programs.length) {
       // Component = <ProgramsListView programs={programs} />;
+      // Component = <ProgramCard />;
     } else
       Component = (
         <View style={styles.container}>

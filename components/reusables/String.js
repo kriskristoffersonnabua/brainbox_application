@@ -14,7 +14,7 @@ const String = props => {
     <Text
       style={[
         {
-          fontSize: fontSize || 10,
+          fontSize: fontSize || 11,
           fontFamily: props.fontFamily || fontFamily,
           textAlign: textAlign || 'center',
           color: color || '#2b2b2b',
