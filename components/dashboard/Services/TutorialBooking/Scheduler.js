@@ -45,13 +45,13 @@ const WeekDay = props => {
 class Scheduler extends Component {
   constructor(props) {
     super(props);
-    let monday = '0:false:0-0:0-0';
-    let tuesday = '1:false:0-0:0-0';
-    let wednesday = '2:false:0-0:0-0';
-    let thursday = '3:false:0-0:0-0';
-    let friday = '4:false:0-0:0-0';
-    let saturday = '5:false:0-0:0-0';
-    let sunday = '6:false:0-0:0-0';
+    let monday = '1:false:0-0:0-0';
+    let tuesday = '2:false:0-0:0-0';
+    let wednesday = '3:false:0-0:0-0';
+    let thursday = '4:false:0-0:0-0';
+    let friday = '5:false:0-0:0-0';
+    let saturday = '6:false:0-0:0-0';
+    let sunday = '0:false:0-0:0-0';
     this.state = {
       monday,
       mondaySchedule: parseWeekdaySchedule(monday),
@@ -93,7 +93,7 @@ class Scheduler extends Component {
   }
 
   _allSchedule = () => {
-    const { 
+    const {
       mondaySchedule,
       tuesdaySchedule,
       wednesdaySchedule,
@@ -103,15 +103,15 @@ class Scheduler extends Component {
       sundaySchedule,
     } = this.state;
     this.props.onScheduleChange({
-      monday: mondaySchedule,
-      tuesday: tuesdaySchedule,
-      wednesday: wednesdaySchedule,
-      thursday: thursdaySchedule,
-      friday: fridaySchedule,
-      saturyda: saturdaySchedule,
-      sunday: sundaySchedule,
+      0: sundaySchedule,
+      1: mondaySchedule,
+      2: tuesdaySchedule,
+      3: wednesdaySchedule,
+      4: thursdaySchedule,
+      5: fridaySchedule,
+      6: saturdaySchedule,
     });
-  }
+  };
 
   _weekdayHeader = weekday => {
     let data, newSchedule;
@@ -123,10 +123,13 @@ class Scheduler extends Component {
           data,
           'active',
         );
-        this.setState({
-          monday: newSchedule,
-          mondaySchedule: parseWeekdaySchedule(newSchedule),
-        }, this._allSchedule);
+        this.setState(
+          {
+            monday: newSchedule,
+            mondaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 1:
         data = this.state.tuesdaySchedule.active ? 'false' : 'true';
@@ -135,10 +138,13 @@ class Scheduler extends Component {
           data,
           'active',
         );
-        this.setState({
-          tuesday: newSchedule,
-          tuesdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            tuesday: newSchedule,
+            tuesdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 2:
         data = this.state.wednesdaySchedule.active ? 'false' : 'true';
@@ -147,10 +153,13 @@ class Scheduler extends Component {
           data,
           'active',
         );
-        this.setState({
-          wednesday: newSchedule,
-          wednesdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            wednesday: newSchedule,
+            wednesdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 3:
         data = this.state.thursdaySchedule.active ? 'false' : 'true';
@@ -159,10 +168,13 @@ class Scheduler extends Component {
           data,
           'active',
         );
-        this.setState({
-          thursday: newSchedule,
-          thursdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            thursday: newSchedule,
+            thursdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 4:
         data = this.state.fridaySchedule.active ? 'false' : 'true';
@@ -171,10 +183,13 @@ class Scheduler extends Component {
           data,
           'active',
         );
-        this.setState({
-          friday: newSchedule,
-          fridaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            friday: newSchedule,
+            fridaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 5:
         data = this.state.saturdaySchedule.active ? 'false' : 'true';
@@ -183,10 +198,13 @@ class Scheduler extends Component {
           data,
           'active',
         );
-        this.setState({
-          saturday: newSchedule,
-          saturdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            saturday: newSchedule,
+            saturdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 6:
         data = this.state.sundaySchedule.active ? 'false' : 'true';
@@ -195,10 +213,13 @@ class Scheduler extends Component {
           data,
           'active',
         );
-        this.setState({
-          sunday: newSchedule,
-          sundaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            sunday: newSchedule,
+            sundaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       default:
         break;
@@ -214,11 +235,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'morningTime',
         );
-        this.setState({
-          monday: newSchedule,
-          mondaySchedule: parseWeekdaySchedule(newSchedule),
-          mondayMorningTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            monday: newSchedule,
+            mondaySchedule: parseWeekdaySchedule(newSchedule),
+            mondayMorningTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 1:
         newSchedule = insertWeekdayScheduleData(
@@ -226,11 +250,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'morningTime',
         );
-        this.setState({
-          tuesday: newSchedule,
-          tuesdaySchedule: parseWeekdaySchedule(newSchedule),
-          tuesdayMorningTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            tuesday: newSchedule,
+            tuesdaySchedule: parseWeekdaySchedule(newSchedule),
+            tuesdayMorningTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 2:
         newSchedule = insertWeekdayScheduleData(
@@ -238,11 +265,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'morningTime',
         );
-        this.setState({
-          wednesday: newSchedule,
-          wednesdaySchedule: parseWeekdaySchedule(newSchedule),
-          wednesdayMorningTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            wednesday: newSchedule,
+            wednesdaySchedule: parseWeekdaySchedule(newSchedule),
+            wednesdayMorningTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 3:
         newSchedule = insertWeekdayScheduleData(
@@ -250,11 +280,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'morningTime',
         );
-        this.setState({
-          thursday: newSchedule,
-          thursdaySchedule: parseWeekdaySchedule(newSchedule),
-          thursdayMorningTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            thursday: newSchedule,
+            thursdaySchedule: parseWeekdaySchedule(newSchedule),
+            thursdayMorningTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 4:
         newSchedule = insertWeekdayScheduleData(
@@ -262,11 +295,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'morningTime',
         );
-        this.setState({
-          friday: newSchedule,
-          fridaySchedule: parseWeekdaySchedule(newSchedule),
-          fridayMorningTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            friday: newSchedule,
+            fridaySchedule: parseWeekdaySchedule(newSchedule),
+            fridayMorningTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 5:
         newSchedule = insertWeekdayScheduleData(
@@ -274,11 +310,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'morningTime',
         );
-        this.setState({
-          saturday: newSchedule,
-          saturdaySchedule: parseWeekdaySchedule(newSchedule),
-          saturdayMorningTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            saturday: newSchedule,
+            saturdaySchedule: parseWeekdaySchedule(newSchedule),
+            saturdayMorningTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 6:
         newSchedule = insertWeekdayScheduleData(
@@ -286,11 +325,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'morningTime',
         );
-        this.setState({
-          sunday: newSchedule,
-          sundaySchedule: parseWeekdaySchedule(newSchedule),
-          sundayMorningTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            sunday: newSchedule,
+            sundaySchedule: parseWeekdaySchedule(newSchedule),
+            sundayMorningTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       default:
         break;
@@ -303,85 +345,106 @@ class Scheduler extends Component {
       case 0:
         newSchedule = insertWeekdayScheduleData(
           this.state.monday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'morningHours',
         );
-        this.setState({
-          monday: newSchedule,
-          mondaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            monday: newSchedule,
+            mondaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 1:
         newSchedule = insertWeekdayScheduleData(
           this.state.tuesday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'morningHours',
         );
-        this.setState({
-          tuesday: newSchedule,
-          tuesdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            tuesday: newSchedule,
+            tuesdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 2:
         newSchedule = insertWeekdayScheduleData(
           this.state.wednesday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'morningHours',
         );
-        this.setState({
-          wednesday: newSchedule,
-          wednesdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            wednesday: newSchedule,
+            wednesdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 3:
         newSchedule = insertWeekdayScheduleData(
           this.state.thursday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'morningHours',
         );
-        this.setState({
-          thursday: newSchedule,
-          thursdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            thursday: newSchedule,
+            thursdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 4:
         newSchedule = insertWeekdayScheduleData(
           this.state.friday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'morningHours',
         );
-        this.setState({
-          friday: newSchedule,
-          fridaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            friday: newSchedule,
+            fridaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 5:
         newSchedule = insertWeekdayScheduleData(
           this.state.saturday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'morningHours',
         );
-        this.setState({
-          saturday: newSchedule,
-          saturdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            saturday: newSchedule,
+            saturdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 6:
         newSchedule = insertWeekdayScheduleData(
           this.state.sunday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'morningHours',
         );
-        this.setState({
-          sunday: newSchedule,
-          sundaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            sunday: newSchedule,
+            sundaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       default:
         break;
     }
   };
-  
+
   _afternoonTimeHandler = (weekday, newTime, newTimeString) => {
     let newSchedule;
     switch (weekday) {
@@ -391,11 +454,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'afternoonTime',
         );
-        this.setState({
-          monday: newSchedule,
-          mondaySchedule: parseWeekdaySchedule(newSchedule),
-          mondayAfternoonTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            monday: newSchedule,
+            mondaySchedule: parseWeekdaySchedule(newSchedule),
+            mondayAfternoonTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 1:
         newSchedule = insertWeekdayScheduleData(
@@ -403,11 +469,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'afternoonTime',
         );
-        this.setState({
-          tuesday: newSchedule,
-          tuesdaySchedule: parseWeekdaySchedule(newSchedule),
-          tuesdayAfternoonTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            tuesday: newSchedule,
+            tuesdaySchedule: parseWeekdaySchedule(newSchedule),
+            tuesdayAfternoonTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 2:
         newSchedule = insertWeekdayScheduleData(
@@ -415,11 +484,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'afternoonTime',
         );
-        this.setState({
-          wednesday: newSchedule,
-          wednesdaySchedule: parseWeekdaySchedule(newSchedule),
-          wednesdayAfternoonTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            wednesday: newSchedule,
+            wednesdaySchedule: parseWeekdaySchedule(newSchedule),
+            wednesdayAfternoonTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 3:
         newSchedule = insertWeekdayScheduleData(
@@ -427,11 +499,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'afternoonTime',
         );
-        this.setState({
-          thursday: newSchedule,
-          thursdaySchedule: parseWeekdaySchedule(newSchedule),
-          thursdayAfternoonTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            thursday: newSchedule,
+            thursdaySchedule: parseWeekdaySchedule(newSchedule),
+            thursdayAfternoonTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 4:
         newSchedule = insertWeekdayScheduleData(
@@ -439,11 +514,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'afternoonTime',
         );
-        this.setState({
-          friday: newSchedule,
-          fridaySchedule: parseWeekdaySchedule(newSchedule),
-          fridayAfternoonTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            friday: newSchedule,
+            fridaySchedule: parseWeekdaySchedule(newSchedule),
+            fridayAfternoonTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 5:
         newSchedule = insertWeekdayScheduleData(
@@ -451,11 +529,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'afternoonTime',
         );
-        this.setState({
-          saturday: newSchedule,
-          saturdaySchedule: parseWeekdaySchedule(newSchedule),
-          saturdayAfternoonTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            saturday: newSchedule,
+            saturdaySchedule: parseWeekdaySchedule(newSchedule),
+            saturdayAfternoonTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       case 6:
         newSchedule = insertWeekdayScheduleData(
@@ -463,11 +544,14 @@ class Scheduler extends Component {
           `${newTime}`,
           'afternoonTime',
         );
-        this.setState({
-          sunday: newSchedule,
-          sundaySchedule: parseWeekdaySchedule(newSchedule),
-          sundayAfternoonTimeString: newTimeString,
-        },this._allSchedule);
+        this.setState(
+          {
+            sunday: newSchedule,
+            sundaySchedule: parseWeekdaySchedule(newSchedule),
+            sundayAfternoonTimeString: newTimeString,
+          },
+          this._allSchedule,
+        );
         break;
       default:
         break;
@@ -480,79 +564,100 @@ class Scheduler extends Component {
       case 0:
         newSchedule = insertWeekdayScheduleData(
           this.state.monday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'afternoonHours',
         );
-        this.setState({
-          monday: newSchedule,
-          mondaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            monday: newSchedule,
+            mondaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 1:
         newSchedule = insertWeekdayScheduleData(
           this.state.tuesday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'afternoonHours',
         );
-        this.setState({
-          tuesday: newSchedule,
-          tuesdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            tuesday: newSchedule,
+            tuesdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 2:
         newSchedule = insertWeekdayScheduleData(
           this.state.wednesday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'afternoonHours',
         );
-        this.setState({
-          wednesday: newSchedule,
-          wednesdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            wednesday: newSchedule,
+            wednesdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 3:
         newSchedule = insertWeekdayScheduleData(
           this.state.thursday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'afternoonHours',
         );
-        this.setState({
-          thursday: newSchedule,
-          thursdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            thursday: newSchedule,
+            thursdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 4:
         newSchedule = insertWeekdayScheduleData(
           this.state.friday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'afternoonHours',
         );
-        this.setState({
-          friday: newSchedule,
-          fridaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            friday: newSchedule,
+            fridaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 5:
         newSchedule = insertWeekdayScheduleData(
           this.state.saturday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'afternoonHours',
         );
-        this.setState({
-          saturday: newSchedule,
-          saturdaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            saturday: newSchedule,
+            saturdaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       case 6:
         newSchedule = insertWeekdayScheduleData(
           this.state.sunday,
-          hours.length < 1? "0": hours,
+          hours.length < 1 ? '0' : hours,
           'afternoonHours',
         );
-        this.setState({
-          sunday: newSchedule,
-          sundaySchedule: parseWeekdaySchedule(newSchedule),
-        },this._allSchedule);
+        this.setState(
+          {
+            sunday: newSchedule,
+            sundaySchedule: parseWeekdaySchedule(newSchedule),
+          },
+          this._allSchedule,
+        );
         break;
       default:
         break;

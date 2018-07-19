@@ -4,18 +4,11 @@ const initialState = {};
 
 export default function(state = initialState, action) {
   switch (action.type) {
-    case types.LOGIN_PAGE:
+    case types.LANDING_PAGE:
       return {
         ...state,
         landingPage: action.payload,
       };
-      break;
-    case types.SIGNUP_PAGE:
-      return {
-        ...state,
-        landingPage: action.payload,
-      };
-      break;
     default:
       return state;
   }

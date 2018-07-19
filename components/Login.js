@@ -87,4 +87,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(null, {goToSignupPage, authenticateUser})(Login);
+export default connect(null, {
+  goToSignupPage,
+  authenticateUser,
+})(Login);

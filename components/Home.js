@@ -3,6 +3,7 @@ import {StyleSheet, View, AsyncStorage} from 'react-native';
 import {connect} from 'react-redux';
 import Signup from './Signup';
 import Login from './Login';
+import AccountSettings from './AccountSettings';
 import UserDashboard from './dashboard/UserDashboard';
 import Layout from './layouts/dashboard-layout';
 import Actions from '../actions';
@@ -14,37 +15,41 @@ class Home extends React.Component {
   }
   render() {
     let component;
-    if (this.props.authToken != null) {
-      component = <Layout template={UserDashboard} />;
-    } else {
-      component =
-        this.props.landingPage == 'Signup' ? (
-          <Signup />
-        ) : this.props.landingPage == 'Login' ? (
-          <Login />
-        ) : (
-          <Login />
-        );
+    const {landingPage} = this.props;
+    switch (landingPage) {
+      case 'AccountSettings':
+        component = <AccountSettings />;
+        break;
+      case 'AccountSettingsEdit':
+        component = <AccountSettings edit />;
+        break;
+      case 'UserDashboard':
+        component = <Layout template={UserDashboard} />;
+        break;
+      case 'Signup':
+        component = <Signup />;
+        break;
+      case 'Login':
+        component = <Login />;
+        break;
+      default:
+        break;
     }
     return <View style={styles.container}>{component}</View>;
   }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'stretch',
+    alignSelf: 'stretch',
+    padding: 10,
   },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    authToken:
-      state.loggedInUser.authToken ||
-      state.loggedInUser.authToken ||
-      state.signupUserAction.authTOken,
     landingPage:
-      state.goToLoginPage.landingPage || state.goToSignupPage.landingPage,
+      state.AppNavigationReducer && state.AppNavigationReducer.landingPage,
   };
 };
 

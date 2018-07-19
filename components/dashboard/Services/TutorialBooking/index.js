@@ -10,7 +10,8 @@ import {
   TimePickerAndroid,
   TouchableOpacity,
   View,
-  Text
+  Text,
+  AsyncStorage,
 } from 'react-native';
 import {windowDimensions} from '../../../../lib/device';
 import {
@@ -19,11 +20,16 @@ import {
   TextField,
   RadioButton,
   Button,
-  Subjects
+  Subjects,
 } from '../../../reusables';
 import Dash from 'react-native-dash';
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
+import RNGooglePlaces from 'react-native-google-places';
 import Scheduler from './Scheduler';
+import {getDates, generateBookedSchedules, generateLPR} from './controller';
+import Actions from '../../../../actions';
+const {createAppointmentAction, getUserInformation} = Actions;
+import {connect} from 'react-redux';
 
 const Tutee = props => {
   return (
@@ -42,7 +48,11 @@ const Tutee = props => {
         marginBottom: 10,
       }}>
       <LocalImage
-        source={props.add ? require('../../../../assets/images/icons/plusIcon.png'): require('../../../../assets/images/icons/minusIcon.png')}
+        source={
+          props.add
+            ? require('../../../../assets/images/icons/plusIcon.png')
+            : require('../../../../assets/images/icons/minusIcon.png')
+        }
         originalWidth={17}
         originalHeight={17}
         style={{
@@ -50,7 +60,32 @@ const Tutee = props => {
           left: 10,
         }}
       />
-      <String text={`${props.tutee.firstname} ${props.tutee.lastname}`} fontSize={11} />
+      <String
+        text={`${props.tutee.firstname} ${props.tutee.lastname}`}
+        fontSize={11}
+      />
+    </TouchableOpacity>
+  );
+};
+
+const CustomSchedule = props => {
+  return (
+    <TouchableOpacity onPress={props.onPress}>
+      <View
+        style={{
+          width: '100%',
+          flexDirection: 'row',
+          padding: 10,
+          borderWidth: 1,
+          borderColor: '#979797',
+          borderRadius: 5,
+          justifyContent: 'space-between',
+          marginBottom: 5,
+        }}>
+        <String text={props.schedule.ottDateString} />
+        <String text={props.schedule.ottTimeString} />
+        <String text={props.schedule.ottHours + ' hour/s.'} />
+      </View>
     </TouchableOpacity>
   );
 };
@@ -95,17 +130,21 @@ class TutorialBooking extends Component {
       ottDateString: '',
       ottTime: null,
       ottTimeString: '',
-      ottHours: null,
+      ottHours: '',
 
       // one week tutorial states
       owtStartDate: null,
       owtStartDateString: '',
       owtEndDate: null,
       owtEndDateString: '',
+      owtSchedule: null,
 
       // one month tutorial states
-      omtDate: null,
-      omtDateString: '',
+      omtStartDate: null,
+      omtStartDateString: '',
+      omtEndDate: null,
+      omtEndDateString: '',
+      omtSchedule: null,
 
       //add new tutee modal
       newTuteeModalVisible: false,
@@ -119,21 +158,92 @@ class TutorialBooking extends Component {
       existingTuteeModalVisible: false,
 
       //tutees
+      existingTutees: [],
+
+      //data
       tutees: [],
-      existingTutees: [{
-        firstname: 'Kris Kristofferson',
-        lastname: 'Nabua',
-        school: 'Sto. Nino Sped Center'
-      }]
+      customDates: [],
+      tutorId: props.tutorId,
+      //default address if user is choosing center based
+      address: {
+        address:
+          '165 Avenida Veteranos, Downtown, Tacloban City, 6500 Leyte, Philippines',
+        east: 125.00217583029146,
+        latitude: 11.24156750000001,
+        longitude: 125.00101953124998,
+        name: `11°14'29.6"N 125°00'03.7"E`,
+        north: 11.243089380291503,
+        placeID: '7Q3762R2+JCCP',
+        south: 11.240391419708498,
+      },
     };
   }
+  addCustomDate = () => {
+    const {
+      ottDate,
+      ottDateString,
+      ottTime,
+      ottTimeString,
+      ottHours,
+      customDates,
+    } = this.state;
+    customDates.push({
+      ottDate,
+      ottDateString,
+      ottTime,
+      ottTimeString,
+      ottHours,
+    });
+    this.setState({
+      customDates,
+      ottDate: null,
+      ottDateString: '',
+      ottTime: null,
+      ottTimeString: '',
+      ottHours: '',
+    });
+  };
+  popCustomDate = index => {
+    const {customDates} = this.state;
+    customDates.splice(index, 1);
+    this.setState({customDates});
+  };
+  componentWillReceiveProps(nextProps) {
+    const {user = {}} = nextProps;
+    if (user && user.tutees) {
+      this.setState({existingTutees: user.tutees});
+    }
+  }
+  componentDidMount() {
+    this.props.getUserInformation();
+  }
+  openSearchModal() {
+    RNGooglePlaces.openPlacePickerModal({
+      latitude: 11.241568,
+      longitude: 125.001022,
+      radius: 0.2,
+    })
+      .then(place => {
+        this.setState(
+          {
+            address: place,
+          },
+          () => {
+            const {latitude, longitude} = place;
+            this.refs.maps.animateToCoordinate({latitude, longitude}, 10);
+          },
+        );
+      })
+      .catch(error => console.log(error.message));
+  }
   render() {
-    console.log(this.state);
     return (
       <ScrollView style={{flex: 1, backgroundColor: 'blue'}}>
         <View style={styles.container}>
           <View style={styles.backButtonContainer}>
-            <TouchableOpacity style={styles.backButton}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={this.props.cancelTutorSelection}>
               <LocalImage
                 source={require('../../../../assets/images/icons/backButton.png')}
                 resize
@@ -150,7 +260,11 @@ class TutorialBooking extends Component {
             style={{padding: 10}}
           />
           <Dash
-            style={{width: windowDimensions.width, height: 2, marginBottom: 10}}
+            style={{
+              width: windowDimensions.width * 0.95,
+              height: 2,
+              marginBottom: 10,
+            }}
             dashLength={5}
             dashGap={5}
             dashColor={'#979797'}
@@ -171,26 +285,31 @@ class TutorialBooking extends Component {
               />
             );
           })}
-          <Modal 
+          <Modal
             transparent={true}
-            visible={this.state.existingTuteeModalVisible}
-          >
+            onRequestClose={() =>
+              this.setState({existingTuteeModalVisible: false})
+            }
+            visible={this.state.existingTuteeModalVisible}>
             <View
               style={{
                 flex: 1,
                 justifyContent: 'center',
                 alignItems: 'center',
-                backgroundColor: 'rgba(43,43,43,0.24)'
-              }}
-            >
-              <View 
+                backgroundColor: 'rgba(43,43,43,0.24)',
+              }}>
+              <View
                 style={{
-                width: '90%',
-                backgroundColor: '#fafafa',
-                justifyContent: 'center',
-                borderRadius: 5,
-                padding: 10
+                  width: '90%',
+                  backgroundColor: '#fafafa',
+                  justifyContent: 'center',
+                  borderRadius: 5,
+                  padding: 10,
                 }}>
+                <String
+                  text={'Tap on a tutee below:'}
+                  style={{marginBottom: 10}}
+                />
                 {this.state.existingTutees.map((tutee, index) => {
                   return (
                     <Tutee
@@ -202,91 +321,123 @@ class TutorialBooking extends Component {
                     />
                   );
                 })}
-              </View>
-            </View>
-          </Modal>
-          <Modal 
-            transparent={true}
-            visible={this.state.newTuteeModalVisible}
-          >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'rgba(43,43,43,0.24)'
-              }}
-            >
-              <View 
-                style={{
-                width: '90%',
-                backgroundColor: '#fafafa',
-                justifyContent: 'center',
-                borderRadius: 5,
-                padding: 10
-              }}>
-              <TextField 
-                onChangeText={(value)=>{
-                  this.setState({newTuteeFirstname: value});
-                }}
-                placeholder="Firstname" 
-                style={{ width: '100%' }}/>
-              <TextField 
-                onChangeText={(value)=>{
-                  this.setState({newTuteeLastname: value});
-                }}
-                placeholder="Lastname" 
-                style={{ width: '100%' }}/>
-              <TextField 
-                datepicker
-                focusCallback={({newDate, newDateString})=>{
-                  this.setState({
-                    newTuteeBirthday: newDate,
-                    newTuteeBirthdayString: newDateString
-                  })
-                }}
-                value={this.state.newTuteeBirthdayString}
-                placeholder="Birthday" 
-                style={{ width: '100%' }}/>
-              <TextField 
-                onChangeText={(value)=>{
-                  this.setState({newTuteeSchool: value});
-                }}
-                placeholder="School" 
-                style={{ width: '100%' }}/>
-              <View style={{
-                width: '100%',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                flexDirection: 'row',
-                marginTop: 10
-              }}>
-                <Button
-                  width={80}
-                  type="confirm"
-                  text={'Add Tutee'}
-                  fontSize={12}
-                  style={{
-                    marginRight: 10
-                  }}
-                  onPress={this._addNewTutee}
-                />
                 <Button
                   width={55}
                   type="cancel"
                   text={'Cancel'}
                   fontSize={12}
-                  onPress={()=>(this.setState({newTuteeModalVisible: !this.state.newTuteeModalVisible}))}
+                  style={{
+                    alignSelf: 'flex-start',
+                    height: 30,
+                  }}
+                  onPress={() =>
+                    this.setState({
+                      existingTuteeModalVisible: !this.state
+                        .existingTuteeModalVisible,
+                    })
+                  }
                 />
-              </View>
               </View>
             </View>
           </Modal>
-          <AddButtonIcon text={'Add Existing Tutee'} onPress={()=>(this.setState({existingTuteeModalVisible: true}))} />
-          <AddButtonIcon text={'Add New Tutee'} onPress={()=>(this.setState({newTuteeModalVisible: true}))} />
+          <Modal
+            onRequestClose={() => {
+              this.setState({newTuteeModalVisible: false});
+            }}
+            transparent={true}
+            visible={this.state.newTuteeModalVisible}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(43,43,43,0.24)',
+              }}>
+              <View
+                style={{
+                  width: '90%',
+                  backgroundColor: '#fafafa',
+                  justifyContent: 'center',
+                  borderRadius: 5,
+                  padding: 10,
+                }}>
+                <TextField
+                  onChangeText={value => {
+                    this.setState({newTuteeFirstname: value});
+                  }}
+                  placeholder="Firstname"
+                  style={{width: '100%'}}
+                />
+                <TextField
+                  onChangeText={value => {
+                    this.setState({newTuteeLastname: value});
+                  }}
+                  placeholder="Lastname"
+                  style={{width: '100%'}}
+                />
+                <TextField
+                  datepicker
+                  focusCallback={({newDate, newDateString}) => {
+                    this.setState({
+                      newTuteeBirthday: newDate,
+                      newTuteeBirthdayString: newDateString,
+                    });
+                  }}
+                  value={this.state.newTuteeBirthdayString}
+                  placeholder="Birthday"
+                  style={{width: '100%'}}
+                />
+                <TextField
+                  onChangeText={value => {
+                    this.setState({newTuteeSchool: value});
+                  }}
+                  placeholder="School"
+                  style={{width: '100%'}}
+                />
+                <View
+                  style={{
+                    width: '100%',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    marginTop: 10,
+                  }}>
+                  <Button
+                    width={80}
+                    type="confirm"
+                    text={'Add Tutee'}
+                    fontSize={12}
+                    style={{
+                      marginRight: 10,
+                    }}
+                    onPress={this._addNewTutee}
+                  />
+                  <Button
+                    width={55}
+                    type="cancel"
+                    text={'Cancel'}
+                    fontSize={12}
+                    onPress={() =>
+                      this.setState({
+                        newTuteeModalVisible: !this.state.newTuteeModalVisible,
+                      })
+                    }
+                  />
+                </View>
+              </View>
+            </View>
+          </Modal>
+          <AddButtonIcon
+            text={'Add Existing Tutee'}
+            onPress={() => this.setState({existingTuteeModalVisible: true})}
+          />
+          <AddButtonIcon
+            text={'Add New Tutee'}
+            onPress={() => this.setState({newTuteeModalVisible: true})}
+          />
           <Dash
             style={{
-              width: windowDimensions.width,
+              width: windowDimensions.width * 0.95,
               height: 2,
               marginBottom: 10,
               marginTop: 10,
@@ -305,7 +456,22 @@ class TutorialBooking extends Component {
             style={{marginLeft: 10, marginBottom: 10}}
             active={this.state.centerBased}
             text={'Center-based Tutorial'}
-            onPress={() => this.setState({centerBased: true})}
+            onPress={() =>
+              this.setState({
+                centerBased: true,
+                address: {
+                  address:
+                    '165 Avenida Veteranos, Downtown, Tacloban City, 6500 Leyte, Philippines',
+                  east: 125.00217583029146,
+                  latitude: 11.24156750000001,
+                  longitude: 125.00101953124998,
+                  name: `11°14'29.6"N 125°00'03.7"E`,
+                  north: 11.243089380291503,
+                  placeID: '7Q3762R2+JCCP',
+                  south: 11.240391419708498,
+                },
+              })
+            }
           />
           <RadioButton
             style={{marginLeft: 10, marginBottom: 10}}
@@ -313,34 +479,52 @@ class TutorialBooking extends Component {
             text={'home-based Tutorial'}
             onPress={() => this.setState({centerBased: false})}
           />
-          <TextField
-            placeholder={'Address'}
-            onChangeText={() => {}}
-            style={{
-              width: '100%',
-              marginBottom: 10,
-            }}
-          />
-          <MapView
-            initialRegion={{
-              latitude: 11.249999,
-              longitude: 125.0,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-            style={{
-              height: 250,
-              width: '100%',
-              marginBottom: 10,
-            }}
-            provider="google"
-            minZoomLevel={14}
-            maxZoomLevel={20}
-            zoomControlEnabled={true}
-            onPoiClick={this._mapPressed}
-          />
+          {!this.state.centerBased && [
+            <TextField
+              placeholder={'Address'}
+              onChangeText={() => {}}
+              style={{
+                width: '100%',
+                marginBottom: 10,
+              }}
+              onFocus={evt => {
+                Keyboard.dismiss();
+                this.openSearchModal();
+              }}
+              value={(this.state.address && this.state.address.address) || ''}
+            />,
+            <MapView
+              initialRegion={{
+                latitude: 11.249999,
+                longitude: 125.0,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+              style={{
+                height: 250,
+                width: '100%',
+                marginBottom: 10,
+              }}
+              provider="google"
+              minZoomLevel={15}
+              zoomControlEnabled={true}
+              ref="maps">
+              {this.state.address && (
+                <Marker
+                  coordinate={{
+                    latitude: this.state.address.latitude,
+                    longitude: this.state.address.longitude,
+                  }}
+                />
+              )}
+            </MapView>,
+          ]}
           <Dash
-            style={{width: windowDimensions.width, height: 2, marginBottom: 10}}
+            style={{
+              width: windowDimensions.width * 0.95,
+              height: 2,
+              marginBottom: 10,
+            }}
             dashLength={5}
             dashGap={5}
             dashColor={'#979797'}
@@ -351,9 +535,13 @@ class TutorialBooking extends Component {
             fontSize={11}
             style={{alignSelf: 'flex-start', marginBottom: 5}}
           />
-          <Subjects allSubjects={subjects => this.setState({subjects})}/>
+          <Subjects allSubjects={subjects => this.setState({subjects})} />
           <Dash
-            style={{width: windowDimensions.width, height: 2, marginBottom: 10}}
+            style={{
+              width: windowDimensions.width * 0.95,
+              height: 2,
+              marginBottom: 10,
+            }}
             dashLength={5}
             dashGap={5}
             dashColor={'#979797'}
@@ -367,7 +555,7 @@ class TutorialBooking extends Component {
           <RadioButton
             style={{marginLeft: 10, marginBottom: 10}}
             active={this.state.ott}
-            text={'One-Time Tutorial'}
+            text={'Custom Schedule Tutorial'}
             onPress={() => {
               this.setState({ott: true, owt: false, omt: false});
             }}
@@ -375,64 +563,89 @@ class TutorialBooking extends Component {
           <View
             style={{
               width: '100%',
-              flexDirection: 'row',
               marginBottom: 10,
               paddingLeft: 30,
             }}>
-            <TextField
-              datepicker
-              focusCallback={({ newDate: date, newDateString: dateString }) => {
-                this.setState({
-                  ottDate: date,
-                  ottDateString: dateString,
-                  ott: true,
-                  owt: false,
-                  omt: false,
-                });
-              }}
-              placeholder={'Date'}
-              value={this.state.ottDateString}
+            {this.state.customDates.map((schedule, index) => {
+              return (
+                <CustomSchedule
+                  onPress={() => this.popCustomDate(index)}
+                  key={index}
+                  schedule={schedule}
+                />
+              );
+            })}
+            <View
               style={{
-                flex: 3,
-              }}
-            />
-            <TextField
-              placeholder={'Time'}
-              style={{
-                flex: 1,
-              }}
-              timepicker
-              focusCallback={({ newTime: time, newTimeString: timeString }) =>
-                this.setState({
-                  ottTime: time,
-                  ottTimeString: timeString,
-                  ott: true,
-                  owt: false,
-                  omt: false,
-                })
-              }
-              value={this.state.ottTimeString}
-            />
-            <TextField
-              placeholder={'Hours'}
-              keyboardType="numeric"
-              onChangeText={value => {
-                this.setState({
-                  ottHours: value,
-                  ott: true,
-                  owt: false,
-                  omt: false,
-                });
-              }}
-              style={{
-                flex: 1,
-              }}
-            />
+                width: '100%',
+                flexDirection: 'row',
+                marginBottom: 10,
+              }}>
+              <TextField
+                datepicker
+                focusCallback={({newDate: date, newDateString: dateString}) => {
+                  this.setState({
+                    ottDate: date,
+                    ottDateString: dateString,
+                    ott: true,
+                    owt: false,
+                    omt: false,
+                  });
+                }}
+                placeholder={'Date'}
+                value={this.state.ottDateString}
+                style={{
+                  flex: 3,
+                }}
+              />
+              <TextField
+                placeholder={'Time'}
+                style={{
+                  flex: 2,
+                }}
+                timepicker
+                focusCallback={({newTime: time, newTimeString: timeString}) =>
+                  this.setState({
+                    ottTime: time,
+                    ottTimeString: timeString,
+                    ott: true,
+                    owt: false,
+                    omt: false,
+                  })
+                }
+                value={this.state.ottTimeString}
+              />
+              <TextField
+                placeholder={'Hours'}
+                keyboardType="numeric"
+                onChangeText={value => {
+                  this.setState({
+                    ottHours: parseInt(value, 10),
+                    ott: true,
+                    owt: false,
+                    omt: false,
+                  });
+                }}
+                style={{
+                  flex: 1,
+                }}
+                value={this.state.ottHours + ''}
+              />
+              <Button
+                onPress={this.addCustomDate}
+                width={90}
+                height={35}
+                fontSize={12}
+                style={{padding: 5, alignSelf: 'flex-end'}}
+                type="confirm"
+                text={'Add Schedule'}
+              />
+            </View>
           </View>
           <RadioButton
             style={{marginLeft: 10, marginBottom: 10}}
             active={this.state.owt}
-            text={'One Week Tutorial'}
+            text={'Weekly Tutorial'}
             onPress={() => {
               this.setState({ott: false, owt: true, omt: false});
             }}
@@ -447,11 +660,15 @@ class TutorialBooking extends Component {
             <TextField
               placeholder={'Start Date'}
               datepicker
-              focusCallback={({newDate,newDateString})=>this.setState({
-                owtStartDate: newDate,
-                owtStartDateString: newDateString,
-                ott: false, owt: true, omt: false
-              })}
+              focusCallback={({newDate, newDateString}) =>
+                this.setState({
+                  owtStartDate: newDate,
+                  owtStartDateString: newDateString,
+                  ott: false,
+                  owt: true,
+                  omt: false,
+                })
+              }
               style={{
                 flex: 1,
               }}
@@ -460,103 +677,163 @@ class TutorialBooking extends Component {
             <TextField
               placeholder={'End Date'}
               datepicker
-              focusCallback={({newDate,newDateString})=>this.setState({
-                owtEndDate: newDate,
-                owtEndDateString: newDateString,
-                ott: false, owt: true, omt: false
-              })}
+              focusCallback={({newDate, newDateString}) =>
+                this.setState({
+                  owtEndDate: newDate,
+                  owtEndDateString: newDateString,
+                  ott: false,
+                  owt: true,
+                  omt: false,
+                })
+              }
               style={{
                 flex: 1,
               }}
               value={this.state.owtEndDateString}
             />
           </View>
-          <Scheduler onScheduleChange={(schedule) =>this.setState({owtSchedule: schedule, ott: false, owt: true, omt: false })}/>
-          <RadioButton
-            style={{marginLeft: 10, marginBottom: 10}}
-            active={this.state.omt}
-            text={'One Month Tutorial'}
-            onPress={() => {
-              this.setState({ott: false, owt: false, omt: true});
-            }}
+          <Scheduler
+            onScheduleChange={schedule =>
+              this.setState({
+                owtSchedule: schedule,
+                ott: false,
+                owt: true,
+                omt: false,
+              })
+            }
           />
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              marginBottom: 10,
-              paddingLeft: 30,
-            }}>
-            <TextField
-              placeholder={'Start Date'}
-              datepicker
-              focusCallback={({newDate,newDateString})=>this.setState({
-                omtStartDate: newDate,
-                omtStartDateString: newDateString,
-                ott: false, owt: false, omt: true
-              })}
-              style={{
-                flex: 1,
-              }}
-              value={this.state.omtStartDateString}
-            />
-            <TextField
-              placeholder={'End Date'}
-              datepicker
-              focusCallback={({newDate,newDateString})=>this.setState({
-                omtEndDate: newDate,
-                omtEndDateString: newDateString,
-                ott: false, owt: false, omt: true
-              })}
-              style={{
-                flex: 1,
-              }}
-              value={this.state.omtEndDateString}
-            />
-          </View>
-          <Scheduler onScheduleChange={(schedule) =>this.setState({omtSchedule: schedule, ott: false, owt: false, omt: true })}/>
           <View style={styles.cta}>
             <Button
-              style={{marginLeft: 10}}
+              style={{marginLeft: 10, height: 30}}
               width={55}
               type="cancel"
               text={'Cancel'}
               fontSize={12}
+              onPress={this.props.cancelTutorSelection}
             />
             <Button
-              style={{marginLeft: 10}}
+              style={{marginLeft: 10, height: 30}}
               width={55}
               type="confirm"
               text={'Book'}
               fontSize={12}
+              onPress={this.submitData}
             />
           </View>
         </View>
       </ScrollView>
     );
   }
-  _mapPressed = data => {
-    console.log(data);
-  };
   _addExistingTutee = index => {
-    let { tutees, existingTutees } = this.state;
+    let {tutees, existingTutees} = this.state;
     tutees.push(existingTutees[index]);
     this.setState({tutees, existingTuteeModalVisible: false});
-  }
+  };
   _addNewTutee = () => {
-    let { tutees, newTuteeFirstname, newTuteeLastname, newTuteeBirthday, newTuteeSchool } = this.state;
+    let {
+      tutees,
+      newTuteeFirstname,
+      newTuteeLastname,
+      newTuteeBirthday,
+      newTuteeSchool,
+    } = this.state;
     tutees.push({
       firstname: newTuteeFirstname,
       lastname: newTuteeLastname,
       birthday: newTuteeBirthday,
-      school: newTuteeSchool
-    })
+      school: newTuteeSchool,
+    });
     this.setState({tutees, newTuteeModalVisible: false});
-  }
+  };
   _popTutee = index => {
     let tutees = this.state.tutees;
     tutees.pop(index);
     this.setState({tutees});
+  };
+  submitData = () => {
+    const {tutorId} = this.props;
+    if (!(this.state.tutees.length > 0)) {
+      Alert.alert('Please add a tutee.');
+      return;
+    }
+    if (!this.state.ott && !this.state.owt && !this.state.omt) {
+      Alert.alert('Please select schedule.');
+      return;
+    }
+    if (this.state.ott) {
+      if (!(this.state.customDates.length > 0)) {
+        Alert.alert(
+          'You have chosen custom dates. Please input dates to be booked',
+        );
+        return;
+      }
+      //generate booked schedules
+      let bookedSchedules = generateBookedSchedules(
+        'custom',
+        this.state.customDates,
+      );
+      //generate lpr for this appointment
+      let generatedLPR = generateLPR('custom', this.state.customDates);
+      let appointmentData = {
+        tutorId,
+        tutees: this.state.tutees,
+        address: this.state.address,
+        subjects: this.state.subjects,
+        schedule: this.state.customDates,
+      };
+
+      try {
+        this.props.createAppointmentAction(
+          appointmentData,
+          bookedSchedules,
+          generatedLPR,
+          '5b10f31621d211577ba1aaaa',
+        );
+      } catch (exception) {
+        console.log(exception);
+      }
+    }
+    if (this.state.owt) {
+      if (this.state.owtStartDate == null) {
+        Alert.alert('Please input start date of weekly tutorial.');
+        return;
+      }
+      if (this.state.owtEndDate == null) {
+        Alert.alert('Please input end date of weekly tutorial.');
+        return;
+      }
+      if (this.state.owtSchedule == null) {
+        Alert.alert('Please specify the weekly schedule tutorial.');
+        return;
+      }
+      //generate booked schedules
+      let bookedSchedules = generateBookedSchedules('weekly', {
+        startDate: this.state.owtStartDate,
+        endDate: this.state.owtEndDate,
+        schedule: this.state.owtSchedule,
+      });
+      //generate lpr for this appointment
+      let generatedLPR = generateLPR('weekly', bookedSchedules);
+      let appointmentData = {
+        tutorId,
+        tutees: this.state.tutees,
+        address: this.state.address,
+        subjects: this.state.subjects,
+      };
+
+      try {
+        this.props.createAppointmentAction(
+          appointmentData,
+          bookedSchedules,
+          generatedLPR,
+          '5b10f31621d211577ba1aaaa',
+        );
+        //TODO: alert for succesfull creation
+        this.props.cancelTutorSelection();
+      } catch (exception) {
+        console.log(exception);
+      }
+    }
   };
 }
 
@@ -588,4 +865,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TutorialBooking;
+const mapStateToProps = state => {
+  return {
+    user: state.ResourcesReducer.user,
+  };
+};
+
+export default connect(mapStateToProps, {
+  createAppointmentAction,
+  getUserInformation,
+})(TutorialBooking);

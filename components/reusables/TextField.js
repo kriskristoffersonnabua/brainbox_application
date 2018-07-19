@@ -20,7 +20,10 @@ export default (TextField = props => {
         });
         if (action != DatePickerAndroid.dismissedAction) {
           const newDate = new Date(year, month, day);
-          const newDateString = `${newDate.getMonth()}-${newDate.getDate()}-${newDate.getFullYear()}`;
+
+          const data = newDate.toString().split(' ');
+          // const newDateString = `${newDate.getMonth()}-${newDate.getDate()}-${newDate.getFullYear()}`;
+          const newDateString  = `${data[1]} ${data[2]}, ${data[3]}`;
           props.focusCallback({newDate, newDateString});
         }
       },
