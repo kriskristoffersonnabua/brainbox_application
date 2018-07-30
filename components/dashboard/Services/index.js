@@ -5,6 +5,8 @@ import ServicesList from './ServicesList';
 import SearchTutor from './SearchTutor';
 import TutorialBooking from './TutorialBooking';
 import CSCReviewProgram from './CSCReviewProgram';
+import PSHSReviewProgram from './PSHSReviewProgram';
+import CEEReviewProgram from './CEEReviewProgram';
 import {Service, AccountType} from '../../../lib/constants';
 import {connect} from 'react-redux';
 import Actions from '../../../actions';
@@ -44,20 +46,19 @@ class Main extends Component {
             this.props.user.accountType != AccountType.Admin
           ) {
             component = (
-              <SearchTutor
-                setTutorId={this.setTutorId}
-                back={() => this.setState({selected: null})}
-              />
+              <SearchTutor setTutorId={this.setTutorId} back={this.back} />
             );
           }
         }
         break;
       case Service.CSCExamReview:
-        component = <CSCReviewProgram />;
+        component = <CSCReviewProgram back={this.back} />;
         break;
       case Service.PSHSExamReview:
+        component = <PSHSReviewProgram back={this.back} />;
         break;
       case Service.CEExamReview:
+        component = <CEEReviewProgram back={this.back} />;
         break;
       default:
         component = <ServicesList callback={i => this.selectService(i)} />;
@@ -65,6 +66,9 @@ class Main extends Component {
     }
     return <View style={styles.container}>{component}</View>;
   }
+
+  back = () => this.setState({selected: null});
+
   selectService = selected => {
     switch (selected) {
       case Service.OneOnOneTutorial:

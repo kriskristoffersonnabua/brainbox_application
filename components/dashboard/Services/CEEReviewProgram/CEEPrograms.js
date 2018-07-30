@@ -12,7 +12,7 @@ import {LocalImage, Button} from '../../../reusables';
 // import ProgramCard from '../ProgramCard';
 import ProgramView from '../ProgramView';
 
-class CSCPrograms extends Component {
+class CEEPrograms extends Component {
   state = {
     selectedProgram: null,
     showForm: false,
@@ -20,7 +20,7 @@ class CSCPrograms extends Component {
 
   componentWillMount() {
     //fetch all csc programs
-    this.props.getAllCSCPrograms();
+    this.props.getAllCEEPrograms();
   }
 
   back = () => {
@@ -43,7 +43,6 @@ class CSCPrograms extends Component {
     let Component;
     if (programs != undefined && !!programs.length) {
       if (!!this.state.selectedProgram) {
-        console.log(this.state.selectedProgram.program);
         Component = (
           <ProgramView
             showForm={this.state.showForm}
@@ -107,4 +106,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CSCPrograms;
+export default CEEPrograms;

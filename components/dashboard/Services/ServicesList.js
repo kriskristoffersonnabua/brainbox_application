@@ -56,12 +56,12 @@ class Services extends Component {
           <Service
             callback={this.props.callback}
             service={2}
-            serviceType="College Entrance Exam"
+            serviceType="Philippine Science High School"
           />
           <Service
             callback={this.props.callback}
             service={3}
-            serviceType="Philippine Science High School"
+            serviceType="College Entrance Exam"
           />
         </ScrollView>
       </View>
