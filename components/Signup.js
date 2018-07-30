@@ -176,7 +176,6 @@ class Signup extends React.Component {
     //verify data
     //sanitize data
     //submit data wait for auth token
-    console.log(data);
     try {
       this.props.signupUserAction(data);
     } catch (exception) {

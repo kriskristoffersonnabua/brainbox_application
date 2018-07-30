@@ -39,7 +39,6 @@ const Schedule = props => {
 };
 
 const ProgramView = props => {
-  console.log(props);
   return (
     <View style={styles.programViewContainer}>
       <View style={styles.programBody}>

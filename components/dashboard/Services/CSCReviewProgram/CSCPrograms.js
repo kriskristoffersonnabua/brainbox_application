@@ -43,7 +43,6 @@ class CSCPrograms extends Component {
     let Component;
     if (programs != undefined && !!programs.length) {
       if (!!this.state.selectedProgram) {
-        console.log(this.state.selectedProgram.program);
         Component = (
           <ProgramView
             showForm={this.state.showForm}

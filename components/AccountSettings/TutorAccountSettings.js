@@ -307,8 +307,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    user: state.ResourcesReducer && state.ResourcesReducer.user,
-    tutor: state.ResourceReducer && state.ResourceReducer.tutor,
+    user: !!state.ResourcesReducer && state.ResourcesReducer.user,
+    tutor: !!state.ResourcesReducer && state.ResourcesReducer.tutor,
   };
 };
 
