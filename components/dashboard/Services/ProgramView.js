@@ -11,8 +11,25 @@ import Dash from 'react-native-dash';
 import {Button, String, LocalImage} from '../../reusables';
 import {Services} from '../../../lib/constants';
 import BookReviewForm from './BookReviewForm';
+import {programSchedule} from '../../../lib/converter';
 
 const Schedule = props => {
+  let schedule, date, time, duration;
+  if (!!props.schedule) {
+    schedule = programSchedule(props.schedule);
+    duration = `${schedule.morningDuration} hour/s`;
+    parsedDate = new Date(schedule.date).toString().split(' ');
+    date = `${parsedDate[1]} ${parsedDate[2]} ${parsedDate[3]} (${
+      parsedDate[0]
+    })`;
+    if ((schedule.morningTime % 1) * 60 < 10) {
+      time = `${Math.floor(schedule.morningTime)}:0${(schedule.morningTime %
+        1) *
+        60}`;
+    } else
+      time = `${Math.floor(schedule.morningTime)}:${(schedule.morningTime % 1) *
+        60}`;
+  }
   return (
     <View
       elevation={2}
@@ -31,9 +48,9 @@ const Schedule = props => {
         marginTop: 5,
         marginBottom: 5,
       }}>
-      <String text={'4-12-2018'} />
-      <String text={'8:30'} />
-      <String text={'4 hours'} />
+      <String text={date} />
+      <String text={time} />
+      <String text={duration} />
     </View>
   );
 };
@@ -68,8 +85,8 @@ const ProgramView = props => {
           <View style={styles.scheduleBody}>
             {!!props.program &&
               !!props.program.schedule &&
-              props.program.schedule.map(schedule => {
-                return <Schedule schedule={schedule} />;
+              props.program.schedule.map((schedule, index) => {
+                return <Schedule schedule={schedule} key={index} />;
               })}
           </View>
         </ScrollView>
@@ -77,6 +94,7 @@ const ProgramView = props => {
       <BookReviewForm
         showForm={props.showForm}
         unShowBookForm={props.unShowBookForm}
+        programId={props.program._id}
       />
     </View>
   );

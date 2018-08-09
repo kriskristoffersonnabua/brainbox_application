@@ -1,11 +1,56 @@
 import React from 'react';
-import {Modal, View, Text, StyleSheet} from 'react-native';
+import {Modal, View, Text, StyleSheet, AsyncStorage} from 'react-native';
 import {windowDimensions} from '../../../lib/device';
 import {String, TextField, Button} from '../../reusables';
+import {connect} from 'react-redux';
+import Actions from '../../../actions';
+const {createReviewAppointment} = Actions;
 
 class BookReviewForm extends React.Component {
-  state = {};
+  state = {
+    address: {
+      address:
+        '165 Avenida Veteranos, Downtown, Tacloban City, 6500 Leyte, Philippines',
+      east: 125.00217583029146,
+      latitude: 11.24156750000001,
+      longitude: 125.00101953124998,
+      name: `11°14'29.6"N 125°00'03.7"E`,
+      north: 11.243089380291503,
+      placeID: '7Q3762R2+JCCP',
+      south: 11.240391419708498,
+    },
+    program: this.props.programId,
+    //change this personal data to reviewee on submit form
+    firstname: '',
+    lastname: '',
+    address: '',
+    contact: '',
+    // payment: [],
+  };
+  static getDerivedStateFromProps(nextProps) {
+    console.log('nextProps', nextProps);
+    if (!!nextProps.user) {
+      // const {firstname, lastname, address, contact} = nextProps.user;
+      // return {firstname, lastname, address, contact};
+    }
+    return null;
+  }
+  bookReview = () => {
+    const {firstname, lastname, address, contact, ...otherState} = this.state;
+    let appointmentData = {
+      reviewee: {
+        firstname,
+        lastname,
+        address,
+        contact,
+      },
+      ...otherState,
+    };
+    this.props.createReviewAppointment(appointmentData);
+  };
   render() {
+    console.log(this.props);
+    const {firstname, lastname, address, contact} = this.state;
     return (
       <Modal
         transparent={true}
@@ -16,10 +61,26 @@ class BookReviewForm extends React.Component {
             <String style={styles.programTitle} text={'Civil Service Review'} />
             <View style={styles.programForm}>
               <String text={'Reviewiee Information:'} />
-              <TextField placeholder={'Firstname'} />
-              <TextField placeholder={'Lastname'} />
-              <TextField placeholder={'Address'} />
-              <TextField placeholder={'Contact'} />
+              <TextField
+                onChangeText={text => this.setState({firstname: text})}
+                placeholder={'Firstname'}
+                value={firstname || ''}
+              />
+              <TextField
+                onChangeText={text => this.setState({lastname: text})}
+                placeholder={'Lastname'}
+                value={lastname || ''}
+              />
+              <TextField
+                onChangeText={text => this.setState({address: text})}
+                placeholder={'Address'}
+                value={address || ''}
+              />
+              <TextField
+                onChangeText={text => this.setState({contact: text})}
+                placeholder={'Contact'}
+                value={contact || ''}
+              />
             </View>
             <View style={styles.programCTAS}>
               <Button
@@ -29,7 +90,13 @@ class BookReviewForm extends React.Component {
                 height={40}
                 onPress={this.props.unShowBookForm}
               />
-              <Button width={115} height={40} text={'Confirm'} type="confirm" />
+              <Button
+                onPress={this.bookReview}
+                width={115}
+                height={40}
+                text={'Confirm'}
+                type="confirm"
+              />
             </View>
           </View>
         </View>
@@ -76,4 +143,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookReviewForm;
+const mapStateToProps = state => {
+  return {user: state.ResourcesReducer.user};
+};
+
+export default connect(mapStateToProps, {createReviewAppointment})(
+  BookReviewForm,
+);

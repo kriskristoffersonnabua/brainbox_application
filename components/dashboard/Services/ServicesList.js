@@ -28,11 +28,6 @@ const Service = props => {
     </TouchableOpacity>
   );
 };
-//<LocalImage
-//originalWidth={125}
-//originalHeight={65}
-//source={require('../../../assets/images/1on1tutorial.png')}
-///>
 
 class Services extends Component {
   constructor(props) {

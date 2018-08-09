@@ -19,8 +19,8 @@ const BookedCard = props => {
         />
         <View style={styles.bookedCardInformation}>
           <String text={props.programType} fontSize={12} bold />
-          <String text={props.batchNumber || props.assignedTutor} />
-          <String text={props.schedule} />
+          <String text={props.batchNumber || props.assignedTutor || ''} />
+          <String text={props.schedule || ''} />
         </View>
       </TouchableOpacity>
     </View>

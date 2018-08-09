@@ -24,7 +24,7 @@ class ProgramCard extends React.Component {
           this.props.program.schedule[0],
         );
         let parsedScheduleEndDate = programSchedule(
-          pros.schedule[this.props.program.schedule.length - 1],
+          this.props.schedule[this.props.program.schedule.length - 1],
         );
         parsedScheduleStartDate = parsedScheduleStartDate.date
           .toString()

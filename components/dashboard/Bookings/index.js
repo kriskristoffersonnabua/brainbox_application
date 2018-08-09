@@ -89,14 +89,13 @@ class Main extends Component {
       const {appointments} = this.props;
       component =
         appointments != undefined &&
-        appointments.map(appointment => {
+        appointments.map((appointment, index) => {
           return (
             <BookedCard
+              key={index}
               programType={'sample'}
-              assignedTutor={`${appointment.tutorId.firstname} ${
-                appointment.tutorId.lastname
-              }`}
-              schedule={this.getScheduleString(appointment.bookedSchedules)}
+              assignedTutor={'adam'}
+              schedule={'jan 2018'}
               setIdSelected={() => this.setIdSelected(appointment._id)}
             />
           );

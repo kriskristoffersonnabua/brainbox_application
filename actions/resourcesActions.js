@@ -97,6 +97,19 @@ export const getAllBookedAppointmentsFromClientId = clientId => {
   };
 };
 
+export const createReviewAppointment = appointmentData => {
+  return async dispatch => {
+    const clientId = await AsyncStorage.getItem('bboxUserId');
+    appointmentData['clientId'] = clientId;
+    const appointment = await createAppointment(appointmentData);
+    //deduct slots on program
+    dispatch({
+      type: types.LANDING_PAGE,
+      payload: 'UserDashboard',
+    });
+  };
+};
+
 export const createAppointmentAction = (
   appointmentData,
   bookedSchedules,
