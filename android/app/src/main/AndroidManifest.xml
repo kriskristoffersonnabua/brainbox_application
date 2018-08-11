@@ -8,7 +8,7 @@
       android:name=".MainApplication"
       android:label="@string/app_name"
       android:icon="@mipmap/ic_launcher"
-      android:allowBackup="false"
+      android:allowBackup="true"
       android:theme="@style/AppTheme">
       <activity
         android:name=".MainActivity"
@@ -25,6 +25,17 @@
         android:name="com.google.android.geo.API_KEY"
         android:value="AIzaSyC7WCkGRr9bb9XMRvH61THM9-tA1zBsmN0"
         />
+      <!--PayPal activities-->
+      <service android:name="com.paypal.android.sdk.payments.PayPalService"
+          android:exported="false" />
+      <activity
+          android:name="com.paypal.android.sdk.payments.PaymentActivity" />
+      <activity
+          android:name="com.paypal.android.sdk.payments.LoginActivity" />
+      <activity
+          android:name="com.paypal.android.sdk.payments.PaymentMethodActivity" />     
+      <activity
+          android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity" />
     </application>
 
 </manifest>

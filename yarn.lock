@@ -4297,6 +4297,10 @@ react-native-modal-dropdown@^0.6.2:
   dependencies:
     prop-types "^15.6.0"
 
+react-native-paypal@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-paypal/-/react-native-paypal-1.0.3.tgz#b35349a6d08c0167d1e6a21dfdc746619c242d21"
+
 react-native-tab-view@^0.0.77:
   version "0.0.77"
   resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-0.0.77.tgz#11ceb8e7c23100d07e628dc151b57797524d00d4"
