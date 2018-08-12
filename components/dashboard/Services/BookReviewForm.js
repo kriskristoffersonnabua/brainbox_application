@@ -28,10 +28,9 @@ class BookReviewForm extends React.Component {
     // payment: [],
   };
   static getDerivedStateFromProps(nextProps) {
-    console.log('nextProps', nextProps);
     if (!!nextProps.user) {
-      // const {firstname, lastname, address, contact} = nextProps.user;
-      // return {firstname, lastname, address, contact};
+      const {firstname, lastname, address, contact} = nextProps.user;
+      return {firstname, lastname, address, contact};
     }
     return null;
   }
@@ -49,7 +48,6 @@ class BookReviewForm extends React.Component {
     this.props.createReviewAppointment(appointmentData);
   };
   render() {
-    console.log(this.props);
     const {firstname, lastname, address, contact} = this.state;
     return (
       <Modal

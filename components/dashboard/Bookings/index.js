@@ -6,7 +6,8 @@ import BookedCard from './BookedCard';
 import {connect} from 'react-redux';
 import Actions from '../../../actions';
 import {LoadingPage} from '../../reusables';
-import {AccountType} from '../../../lib/constants';
+import {AccountType, Services} from '../../../lib/constants';
+import {programSchedule} from '../../../lib/converter';
 const {
   getUserInformation,
   getAllBookedAppointmentsFromTutorId,
@@ -34,6 +35,8 @@ class Main extends Component {
       bookedIdSelected: false,
     };
     this.props.getUserInformation();
+    // if appointment program is not null it is a one on one tutorial
+    // if not it is a review, like cee review
   }
   clearSelect = () => {
     this.setState({bookedIdSelected: false});
@@ -70,7 +73,6 @@ class Main extends Component {
     }
     return '';
   };
-  //TODO: program typing
   render() {
     let component;
     const {bookedIdSelected} = this.state;
@@ -90,12 +92,78 @@ class Main extends Component {
       component =
         appointments != undefined &&
         appointments.map((appointment, index) => {
+          console.log(appointment);
+          let programType, assignedTutor, batchNumber, schedule;
+          if (!!appointment.program) {
+            switch (appointment.program.programType) {
+              case 0:
+                programType = Services[0];
+                break;
+              case 1:
+                programType = Services[1];
+                break;
+              case 2:
+                programType = Services[2];
+                break;
+              case 3:
+                programType = Services[3];
+                break;
+              default:
+            }
+            batchNumber = `Batch ${appointment.program.batchNumber}`;
+            //TODO: parse schedule to correct date format
+            const scheduleLength = appointment.program.schedule.length;
+            if (!!scheduleLength) {
+              if (scheduleLength === 1) {
+                let scheduleDate = programSchedule(
+                  appointment.program.schedule[0],
+                )
+                  .date.toString()
+                  .split(' ');
+                schedule = `${scheduleDate[1]} ${scheduleDate[2]} ${
+                  scheduleDate[3]
+                }`;
+              } else {
+                let start = programSchedule(appointment.program.schedule[0])
+                  .date.toString()
+                  .split(' ');
+                let end = programSchedule(
+                  appointment.program.schedule[scheduleLength - 1],
+                )
+                  .date.toString()
+                  .split(' ');
+                schedule = `${start[1]} ${start[2]} ${start[3]} - ${end[1]} ${
+                  end[2]
+                } ${end[3]}`;
+              }
+            }
+          } else {
+            //program is a one on one tutorial
+            programType = 'One-On-One Tutorial';
+            if (!!appointment.tutorId) {
+              assignedTutor = `${appointment.tutorId.firstname} ${
+                appointment.tutorId.lastname
+              }`;
+            }
+            if (!!appointment.schedule.lenth) {
+              if (appointment.schedule.length !== 1) {
+                schedule = `${appointment.schedule[0].ottDateString} - ${
+                  appointment.schedule[appointment.schedule.length - 1]
+                    .ottDateString
+                }`;
+              } else if (appointment.schedule.length === 1) {
+                schedule = `${appointment.schedule[0].ottDateString}`;
+              }
+            }
+          }
+
           return (
             <BookedCard
               key={index}
-              programType={'sample'}
-              assignedTutor={'adam'}
-              schedule={'jan 2018'}
+              programType={(!!programType && programType) || 'Program Title'}
+              assignedTutor={assignedTutor}
+              batchNumber={batchNumber}
+              schedule={(!!schedule && schedule) || 'Schedule'}
               setIdSelected={() => this.setIdSelected(appointment._id)}
             />
           );

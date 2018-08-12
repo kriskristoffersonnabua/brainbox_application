@@ -22,6 +22,7 @@ class ProgramListView extends React.Component {
     return (
       <ScrollView>
         {programs.map((program, index) => {
+          console.log(program);
           return (
             <ProgramCard
               key={index}
