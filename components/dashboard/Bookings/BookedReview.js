@@ -10,6 +10,10 @@ import {
 import {LocalImage, String, Button, Subjects} from '../../reusables';
 import MapView, {Marker} from 'react-native-maps';
 import Dash from 'react-native-dash';
+import {connect} from 'react-redux';
+import Actions from '../../../actions';
+const {getSelectedAppointment} = Actions;
+import {programSchedule} from '../../../lib/converter';
 
 class SubmitFeedbackModal extends Component {
   state = {
@@ -216,10 +220,10 @@ const ScheduledBooking = props => {
         paddingTop: 5,
         paddingBottom: 5,
         backgroundColor: '#BDF287',
+        marginBottom: 10,
       }}>
-      <String text={'4-12-2018'} />
-      <String text={'8:30'} />
-      <String text={'4 hours'} />
+      <String text={props.dateString} />
+      <String text={props.scheduleString} />
     </View>
   );
 };
@@ -244,7 +248,27 @@ class BookedTutorial extends Component {
           lastname: 'Nabua',
         },
       ],
+      address: {
+        address:
+          '165 Avenida Veteranos, Downtown, Tacloban City, 6500 Leyte, Philippines',
+        east: 125.00217583029146,
+        latitude: 11.24156750000001,
+        longitude: 125.00101953124998,
+        name: `11°14'29.6"N 125°00'03.7"E`,
+        north: 11.243089380291503,
+        placeID: '7Q3762R2+JCCP',
+        south: 11.240391419708498,
+      },
     };
+  }
+  componentWillReceiveProps(nextProps) {
+    const {selectedAppointment} = nextProps;
+    if (!!selectedAppointment) {
+      this.setState({selectedAppointment});
+    }
+  }
+  componentWillMount() {
+    this.props.getSelectedAppointment(this.props.appointmentId);
   }
   _toggleFeedbackModal = () => {
     this.setState({feedbackModal: !this.state.feedbackModal});
@@ -267,6 +291,7 @@ class BookedTutorial extends Component {
               height: 25,
             }}>
             <TouchableOpacity
+              onPress={this.props.clearSelect}
               style={{
                 flexDirection: 'row',
                 width: 60,
@@ -282,7 +307,17 @@ class BookedTutorial extends Component {
               <Text>BACK</Text>
             </TouchableOpacity>
           </View>
-          <String text={'Booked Tutorial'} style={{marginBottom: 10}} />
+          <String
+            bold
+            text={this.props.reviewName || 'Review'}
+            fontSize={14}
+            style={{marginBottom: 10}}
+          />
+          <String
+            fontSize={12}
+            text={'Booked Review'}
+            style={{marginBottom: 10}}
+          />
           <Dash
             style={{width: '100%', height: 2, marginBottom: 10}}
             dashLength={4}
@@ -314,7 +349,15 @@ class BookedTutorial extends Component {
               marginBottom: 10,
             }}>
             <String text={'Batch #'} />
-            <String text={`1`} style={{textAlign: 'right'}} />
+            <String
+              text={
+                (!!this.props.selectedAppointment &&
+                  !!this.props.selectedAppointment.program &&
+                  this.props.selectedAppointment.program.batchNumber) ||
+                '1'
+              }
+              style={{textAlign: 'right'}}
+            />
           </View>
           <Dash
             style={{width: '100%', height: 2, marginBottom: 10}}
@@ -327,11 +370,14 @@ class BookedTutorial extends Component {
             text={'Address:'}
             style={{marginBottom: 10, alignSelf: 'flex-start'}}
           />
-          <String text={this.state.address} style={{marginBottom: 10}} />
+          <String
+            text={this.state.address.address}
+            style={{marginBottom: 10}}
+          />
           <MapView
             initialRegion={{
-              latitude: 11.249999,
-              longitude: 125.0,
+              latitude: this.state.address.latitude,
+              longitude: this.state.address.longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
@@ -343,8 +389,14 @@ class BookedTutorial extends Component {
             provider="google"
             minZoomLevel={15}
             zoomControlEnabled={true}
-            ref="maps"
-          />
+            ref="maps">
+            <Marker
+              coordinate={{
+                latitude: this.state.address.latitude,
+                longitude: this.state.address.longitude,
+              }}
+            />
+          </MapView>
           <Dash
             style={{width: '100%', height: 2, marginTop: 10, marginBottom: 10}}
             dashLength={4}
@@ -353,7 +405,7 @@ class BookedTutorial extends Component {
             dashColor={'#979797'}
           />
           <String
-            text={'Scheduled Bookings:'}
+            text={'Review Schedule'}
             style={{marginBottom: 10, alignSelf: 'flex-start'}}
           />
           <View
@@ -362,7 +414,51 @@ class BookedTutorial extends Component {
               justifyContent: 'flex-start',
               alignItems: 'center',
             }}>
-            <ScheduledBooking />
+            {!!this.state.selectedAppointment &&
+              !!this.state.selectedAppointment.program &&
+              !!this.state.selectedAppointment.program.schedule.length &&
+              this.state.selectedAppointment.program.schedule.map(
+                (schedule, key) => {
+                  let schedObject = programSchedule(schedule);
+                  let date = schedObject.date.toString().split(' ');
+                  let morning, afternoon;
+                  if (!!parseInt(schedObject.morningDuration)) {
+                    let hours = parseInt(schedObject.morningTime) / 1;
+                    let minutes = Math.floor(
+                      (schedObject.morningTime % 1) * 60,
+                    );
+                    morning = `${hours}:${
+                      minutes < 10 ? '0' + minutes : minutes
+                    } am`;
+                  }
+                  if (!!parseInt(schedObject.afternoonDuration)) {
+                    let hours = parseInt(schedObject.afternoonTime) / 1;
+                    let minutes = Math.floor(
+                      (schedObject.afternoonTime % 1) * 60,
+                    );
+                    afternoon = `${hours}:${
+                      minutes < 10 ? '0' + minutes : minutes
+                    } p.m.`;
+                  }
+                  let dateString = `${date[1]} ${date[2]},${date[3]}(${
+                    date[0]
+                  })`;
+                  let scheduleString = `${morning}(${
+                    schedObject.morningDuration
+                  } hr/s) ${
+                    !!parseInt(schedObject.afternoonDuration)
+                      ? `- ${afternoon}(${schedObject.afternoonDuration} hr/s)`
+                      : ''
+                  }`;
+                  return (
+                    <ScheduledBooking
+                      key={key}
+                      dateString={dateString}
+                      scheduleString={scheduleString}
+                    />
+                  );
+                },
+              )}
           </View>
         </View>
       </ScrollView>
@@ -379,4 +475,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookedTutorial;
+const mapStateToProps = state => {
+  return {
+    selectedAppointment: state.ResourcesReducer.selectedAppointment,
+  };
+};
+
+// export default BookedTutorial;
+export default connect(mapStateToProps, {
+  getSelectedAppointment,
+})(BookedTutorial);

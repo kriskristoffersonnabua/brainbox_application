@@ -11,7 +11,7 @@ import MapView, {Marker} from 'react-native-maps';
 import Dash from 'react-native-dash';
 import {connect} from 'react-redux';
 import Actions from '../../../actions';
-const {getAppointment} = Actions;
+const {getSelectedAppointment} = Actions;
 
 const Tutee = props => {
   return (
@@ -67,6 +67,7 @@ class BookedTutorial extends Component {
       firstname: 'Kris Kristofferson',
       lastname: 'Nabua',
       address: 'V&G Subdivision, Blk. 2, Phase 4, Tacloban City, Leyte',
+      addressObject: {},
       subjects: ['College Algebra', 'Science and Health'],
       scheduledBookings: [],
       tutees: [
@@ -81,7 +82,36 @@ class BookedTutorial extends Component {
       ],
     };
   }
+  componentWillMount() {
+    this.props.getSelectedAppointment(this.props.appointmentId);
+  }
+  componentWillReceiveProps(nextProps) {
+    const {selectedAppointment} = nextProps;
+    if (!!selectedAppointment && selectedAppointment !== null) {
+      const {
+        tutees,
+        tutorId: {firstname, lastname},
+        address,
+        subjects,
+        schedule,
+      } = selectedAppointment;
+      let addressString, addressObject;
+      if (!!address) {
+        addressObject = JSON.parse(address);
+        console.log(addressObject);
+      }
+      this.setState({
+        firstname,
+        lastname,
+        subjects,
+        tutees,
+        address: addressObject.address,
+        addressObject,
+      });
+    }
+  }
   render() {
+    console.log(this.props);
     return (
       <ScrollView
         style={{
@@ -94,6 +124,7 @@ class BookedTutorial extends Component {
               height: 25,
             }}>
             <TouchableOpacity
+              onPress={this.props.clearSelect}
               style={{
                 flexDirection: 'row',
                 width: 60,
@@ -181,8 +212,8 @@ class BookedTutorial extends Component {
           <String text={this.state.address} style={{marginBottom: 10}} />
           <MapView
             initialRegion={{
-              latitude: 11.249999,
-              longitude: 125.0,
+              latitude: this.state.addressObject.latitude || 11.249999,
+              longitude: this.state.addressObject.longitude || 125.0,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
@@ -194,8 +225,14 @@ class BookedTutorial extends Component {
             provider="google"
             minZoomLevel={15}
             zoomControlEnabled={true}
-            ref="maps"
-          />
+            ref="maps">
+            <Marker
+              coordinate={{
+                latitude: this.state.addressObject.latitude || 11.249999,
+                longitude: this.state.addressObject.longitude || 125.0,
+              }}
+            />
+          </MapView>
           <Dash
             style={{width: '100%', height: 2, marginTop: 10, marginBottom: 10}}
             dashLength={4}
@@ -253,4 +290,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookedTutorial;
+const mapStateToProps = state => {
+  return {
+    selectedAppointment: state.ResourcesReducer.selectedAppointment,
+  };
+};
+
+// export default BookedTutorial;
+export default connect(mapStateToProps, {
+  getSelectedAppointment,
+})(BookedTutorial);

@@ -69,7 +69,7 @@ export const selectProgram = program => {
 // get appointment using the appointmentId given by the applications
 export const getSelectedAppointment = appointmentId => {
   return async dispatch => {
-    const appointment = await getAppointment(tutorId);
+    const appointment = await getAppointment(appointmentId);
     dispatch({
       type: types.SELECTED_APPOINTMENT,
       payload: appointment,
