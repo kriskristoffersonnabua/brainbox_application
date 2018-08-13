@@ -75,7 +75,6 @@ class Main extends Component {
     return '';
   };
   render() {
-    console.log(this.props);
     let component;
     const {bookedIdSelected, programType, reviewName = ''} = this.state;
     if (bookedIdSelected) {
@@ -100,7 +99,6 @@ class Main extends Component {
       component =
         appointments != undefined &&
         appointments.map((appointment, index) => {
-          console.log(appointment);
           let programType, assignedTutor, batchNumber, schedule;
           if (!!appointment.program) {
             switch (appointment.program.programType) {
@@ -146,7 +144,7 @@ class Main extends Component {
             }
           } else {
             //program is a one on one tutorial
-            programType = 'One-On-One Tutorial';
+            programType = 'ONE ON ONE TUTORIAL';
             if (!!appointment.tutorId) {
               assignedTutor = `${appointment.tutorId.firstname} ${
                 appointment.tutorId.lastname
@@ -170,7 +168,7 @@ class Main extends Component {
               programType={(!!programType && programType) || 'Program Title'}
               assignedTutor={assignedTutor}
               batchNumber={batchNumber}
-              schedule={(!!schedule && schedule) || 'Schedule'}
+              schedule={(!!schedule && schedule) || null}
               setIdSelected={() => {
                 let type, reviewName;
                 if (!!appointment.program) {

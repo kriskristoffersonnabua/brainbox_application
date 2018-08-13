@@ -19,7 +19,7 @@ const BookedCard = props => {
           <String
             text={
               (!!batchNumber && batchNumber) ||
-              (!!assignedTutor && assignedTutor) ||
+              (!!assignedTutor && `Tutor ${assignedTutor}`) ||
               'Some Info.'
             }
           />

@@ -26,14 +26,12 @@ class ProgramCard extends React.Component {
         let parsedScheduleEndDate = programSchedule(
           this.props.program.schedule[this.props.program.schedule.length - 1],
         );
-        console.log(parsedScheduleStartDate, parsedScheduleEndDate);
         parsedScheduleStartDate = parsedScheduleStartDate.date
           .toString()
           .split(' ');
         parsedScheduleEndDate = parsedScheduleEndDate.date
           .toString()
           .split(' ');
-        console.log(parsedScheduleStartDate, parsedScheduleEndDate);
         schedule = `${parsedScheduleStartDate[1]} ${
           parsedScheduleStartDate[2]
         }, ${parsedScheduleStartDate[3]} - ${parsedScheduleEndDate[1]} ${
