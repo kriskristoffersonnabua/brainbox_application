@@ -39,17 +39,18 @@ const Tutee = props => {
 const ScheduledBooking = props => {
   let date = new Date(props.date);
   let timestart;
-  console.log(props.start);
   if (props.start < 25) {
     timestart = `${props.start / 1}:${
       (props.start % 1) * 60 < 10
-        ? `0${(props.start % 1) * 60}`
-        : `${(props.start % 1) * 60}`
+        ? `0${Math.floor((props.start % 1) * 60)}`
+        : `${Math.floor((props.start % 1) * 60)}`
     } ${props.start % 1 < 12 ? 'am' : 'pm'}`;
   } else {
     let time = props.start / 3600000;
     timestart = `${Math.floor(time)}:${
-      (time % 1) * 60 < 10 ? `0${(time % 1) * 60}` : `${(time % 1) * 60}`
+      (time % 1) * 60 < 10
+        ? `0${(time % 1) * 60}`
+        : `${Math.floor((time % 1) * 60)}`
     } ${Math.floor(time) < 12 ? 'am' : 'pm'}`;
   }
   let dateObject = date.toString().split(' ');

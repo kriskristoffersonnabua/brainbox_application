@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import LocalImage from './LocalImage';
+import String from './String';
 import {windowDimensions} from '../../lib/device';
 import {connect} from 'react-redux';
 import Actions from '../../actions';
@@ -18,16 +19,20 @@ const MenuItem = props => {
   return (
     <TouchableOpacity
       onPress={props.onPress}
-      elevated={5}
+      elevatation={2}
       style={{
         width: windowDimensions.width,
         height: 30,
-        backgroundColor: '#cecece',
+        paddingTop: 20,
+        paddingBottom: 20,
+        backgroundColor: '#fff',
         shadowOpacity: 1,
         alignItems: 'center',
+        justifyContent: 'center',
+        margin: 1,
         padding: 5,
       }}>
-      <Text>{props.text}</Text>
+      <String bold fontSize={14} text={props.text} />
     </TouchableOpacity>
   );
 };
@@ -39,7 +44,7 @@ class Header extends React.Component {
   render() {
     let maxHeight;
     if (this.state.openMenu) {
-      maxHeight = 170;
+      maxHeight = 200;
     } else {
       maxHeight = 70;
     }
@@ -48,6 +53,7 @@ class Header extends React.Component {
         style={{
           flex: 1,
           justifyContent: 'flex-start',
+          backgroundColor: '#fafafa',
           maxHeight,
         }}>
         <View style={styles.headerBar}>
