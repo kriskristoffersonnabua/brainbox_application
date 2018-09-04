@@ -35,7 +35,7 @@ class Tutors extends Component {
         this.props.tutors.tutors.map((tutor, index) => {
           return (
             <TutorCard
-              key={index}
+              key={tutor._id}
               onPress={e => this.showTutorInformation(tutor._id)}
               tutorName={`${tutor.firstname} ${tutor.lastname}`}
             />

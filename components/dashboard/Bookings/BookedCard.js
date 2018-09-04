@@ -4,23 +4,26 @@ import {AccountType} from '../../../lib/constants';
 import {String, LocalImage} from '../../reusables';
 
 const BookedCard = props => {
+  const {
+    batchNumber,
+    assignedTutor,
+    programType,
+    schedule,
+    setIdSelected,
+  } = props;
   return (
     <View elevation={2} style={styles.bookedContainer}>
-      <TouchableOpacity style={styles.bookedCard} onPress={props.setIdSelected}>
-        <LocalImage
-          resize
-          source={
-            props.type === 'tutorial'
-              ? require('../../../assets/images/icons/oneononeicon.png')
-              : require('../../../assets/images/icons/reviewicon.png')
-          }
-          newWidth={79}
-          newHeight={79}
-        />
+      <TouchableOpacity style={styles.bookedCard} onPress={setIdSelected}>
         <View style={styles.bookedCardInformation}>
-          <String text={props.programType} fontSize={12} bold />
-          <String text={props.batchNumber || props.assignedTutor} />
-          <String text={props.schedule} />
+          <String text={programType} fontSize={14} bold />
+          <String
+            text={
+              (!!batchNumber && batchNumber) ||
+              (!!assignedTutor && `Tutor ${assignedTutor}`) ||
+              'Some Info.'
+            }
+          />
+          <String text={(!!schedule && schedule) || ''} />
         </View>
       </TouchableOpacity>
     </View>
@@ -31,16 +34,19 @@ const styles = StyleSheet.create({
   bookedContainer: {
     backgroundColor: '#fff',
     alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 5,
     marginBottom: 10,
     padding: 10,
+    width: '90%',
   },
   bookedCard: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '90%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
     height: 90,
-    backgroundColor: '#fafafa',
     padding: 10,
   },
   bookedCardInformation: {

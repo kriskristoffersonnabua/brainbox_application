@@ -36,8 +36,8 @@ const TutorCard = props => {
         <LocalImage
           resize
           source={require('../../assets/images/avatars/defaultTutorAvatar.png')}
-          newWidth={110}
-          newHeight={120}
+          newWidth={90}
+          newHeight={90}
         />
         <View style={styles.tutorCardInformation}>
           <Text
@@ -56,17 +56,21 @@ const TutorCard = props => {
 
 const styles = StyleSheet.create({
   tutorCardContainer: {
+    width: '90%',
     backgroundColor: '#fff',
     alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 5,
     marginBottom: 10,
   },
   tutorCard: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '90%',
+    width: '100%',
     height: 90,
     backgroundColor: '#fafafa',
+    padding: 10,
   },
   tutorCardInformation: {
     justifyContent: 'center',

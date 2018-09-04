@@ -11,7 +11,7 @@ import MapView, {Marker} from 'react-native-maps';
 import Dash from 'react-native-dash';
 import {connect} from 'react-redux';
 import Actions from '../../../actions';
-const {getAppointment} = Actions;
+const {getSelectedAppointment} = Actions;
 
 const Tutee = props => {
   return (
@@ -37,6 +37,23 @@ const Tutee = props => {
 };
 
 const ScheduledBooking = props => {
+  let date = new Date(props.date);
+  let timestart;
+  console.log(props.start);
+  if (props.start < 25) {
+    timestart = `${props.start / 1}:${
+      (props.start % 1) * 60 < 10
+        ? `0${(props.start % 1) * 60}`
+        : `${(props.start % 1) * 60}`
+    } ${props.start % 1 < 12 ? 'am' : 'pm'}`;
+  } else {
+    let time = props.start / 3600000;
+    timestart = `${Math.floor(time)}:${
+      (time % 1) * 60 < 10 ? `0${(time % 1) * 60}` : `${(time % 1) * 60}`
+    } ${Math.floor(time) < 12 ? 'am' : 'pm'}`;
+  }
+  let dateObject = date.toString().split(' ');
+  let durationString = `${props.duration} hr/s`;
   return (
     <View
       elevation={2}
@@ -52,10 +69,15 @@ const ScheduledBooking = props => {
         paddingTop: 5,
         paddingBottom: 5,
         backgroundColor: '#BDF287',
+        marginBottom: 10,
       }}>
-      <String text={'4-12-2018'} />
-      <String text={'8:30'} />
-      <String text={'4 hours'} />
+      <String
+        text={`${dateObject[1]} ${dateObject[2]},${dateObject[3]}(${
+          dateObject[0]
+        })`}
+      />
+      <String text={timestart || ''} />
+      <String text={durationString || ''} />
     </View>
   );
 };
@@ -67,8 +89,10 @@ class BookedTutorial extends Component {
       firstname: 'Kris Kristofferson',
       lastname: 'Nabua',
       address: 'V&G Subdivision, Blk. 2, Phase 4, Tacloban City, Leyte',
+      addressObject: {},
       subjects: ['College Algebra', 'Science and Health'],
       scheduledBookings: [],
+      progressReport: [],
       tutees: [
         {
           firstname: 'Kris',
@@ -80,6 +104,36 @@ class BookedTutorial extends Component {
         },
       ],
     };
+  }
+  componentWillMount() {
+    this.props.getSelectedAppointment(this.props.appointmentId);
+  }
+  componentWillReceiveProps(nextProps) {
+    const {selectedAppointment} = nextProps;
+    if (!!selectedAppointment && selectedAppointment !== null) {
+      const {
+        tutees,
+        tutorId: {firstname, lastname},
+        address,
+        subjects,
+        schedule,
+        progressReport,
+      } = selectedAppointment;
+      let addressString, addressObject;
+      if (!!address) {
+        addressObject = JSON.parse(address);
+      }
+      this.setState({
+        firstname,
+        lastname,
+        subjects,
+        tutees,
+        schedule,
+        progressReport,
+        address: addressObject.address,
+        addressObject,
+      });
+    }
   }
   render() {
     return (
@@ -94,6 +148,7 @@ class BookedTutorial extends Component {
               height: 25,
             }}>
             <TouchableOpacity
+              onPress={this.props.clearSelect}
               style={{
                 flexDirection: 'row',
                 width: 60,
@@ -181,8 +236,8 @@ class BookedTutorial extends Component {
           <String text={this.state.address} style={{marginBottom: 10}} />
           <MapView
             initialRegion={{
-              latitude: 11.249999,
-              longitude: 125.0,
+              latitude: this.state.addressObject.latitude || 11.249999,
+              longitude: this.state.addressObject.longitude || 125.0,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
@@ -194,8 +249,14 @@ class BookedTutorial extends Component {
             provider="google"
             minZoomLevel={15}
             zoomControlEnabled={true}
-            ref="maps"
-          />
+            ref="maps">
+            <Marker
+              coordinate={{
+                latitude: this.state.addressObject.latitude || 11.249999,
+                longitude: this.state.addressObject.longitude || 125.0,
+              }}
+            />
+          </MapView>
           <Dash
             style={{width: '100%', height: 2, marginTop: 10, marginBottom: 10}}
             dashLength={4}
@@ -220,30 +281,36 @@ class BookedTutorial extends Component {
             dashColor={'#979797'}
           />
           <String
-            text={'Scheduled Bookings:'}
+            text={'Scheduled Tutorial:'}
             style={{marginBottom: 10, alignSelf: 'flex-start'}}
           />
           <View
             style={{
               width: '100%',
-              justifyContent: 'flex-start',
+              justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <ScheduledBooking />
+            {!!this.state.progressReport.length &&
+              this.state.progressReport.map(report => {
+                let date = report.date;
+                let duration = report.duration;
+                let start = report.time_start;
+                console.log(report);
+                return (
+                  <ScheduledBooking
+                    date={date}
+                    duration={duration}
+                    start={start}
+                  />
+                );
+              })}
           </View>
         </View>
       </ScrollView>
     );
   }
 }
-// {this.state.address && (
-//   <Marker
-//   coordinate={{
-//     latitude: this.state.addressObject.latitude,
-//       longitude: this.state.addressObject.longitude,
-//   }}
-//   />
-// )}
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -253,4 +320,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookedTutorial;
+const mapStateToProps = state => {
+  return {
+    selectedAppointment: state.ResourcesReducer.selectedAppointment,
+  };
+};
+
+// export default BookedTutorial;
+export default connect(mapStateToProps, {
+  getSelectedAppointment,
+})(BookedTutorial);

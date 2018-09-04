@@ -28,11 +28,6 @@ const Service = props => {
     </TouchableOpacity>
   );
 };
-//<LocalImage
-//originalWidth={125}
-//originalHeight={65}
-//source={require('../../../assets/images/1on1tutorial.png')}
-///>
 
 class Services extends Component {
   constructor(props) {
@@ -56,12 +51,12 @@ class Services extends Component {
           <Service
             callback={this.props.callback}
             service={2}
-            serviceType="College Entrance Exam"
+            serviceType="Philippine Science High School"
           />
           <Service
             callback={this.props.callback}
             service={3}
-            serviceType="Philippine Science High School"
+            serviceType="College Entrance Exam"
           />
         </ScrollView>
       </View>

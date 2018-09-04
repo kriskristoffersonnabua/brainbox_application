@@ -1,5 +1,5 @@
-import * as types from './types';
 import {AsyncStorage} from 'react-native';
+import * as types from './types';
 import {
   allTutors,
   getLoginUserInformation,
@@ -69,7 +69,7 @@ export const selectProgram = program => {
 // get appointment using the appointmentId given by the applications
 export const getSelectedAppointment = appointmentId => {
   return async dispatch => {
-    const appointment = await getAppointment(tutorId);
+    const appointment = await getAppointment(appointmentId);
     dispatch({
       type: types.SELECTED_APPOINTMENT,
       payload: appointment,
@@ -93,6 +93,19 @@ export const getAllBookedAppointmentsFromClientId = clientId => {
     dispatch({
       type: types.BOOKED_TUTORIALS,
       payload: appointments,
+    });
+  };
+};
+
+export const createReviewAppointment = appointmentData => {
+  return async dispatch => {
+    const clientId = await AsyncStorage.getItem('bboxUserId');
+    appointmentData['clientId'] = clientId;
+    const appointment = await createAppointment(appointmentData);
+    //deduct slots on program
+    dispatch({
+      type: types.LANDING_PAGE,
+      payload: 'UserDashboard',
     });
   };
 };
