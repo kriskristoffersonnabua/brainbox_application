@@ -3,6 +3,7 @@ import {
   signupUserAction,
   signoutUser,
   authenticateUser,
+  authenticateFBUser,
   updateUserInfo,
 } from './userActions';
 import {
@@ -35,6 +36,7 @@ export default (Actions = {
   signupUserAction,
   signoutUser,
   authenticateUser,
+  authenticateFBUser,
   goToSignupPage,
   goToLoginPage,
   getAllTutors,

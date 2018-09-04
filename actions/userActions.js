@@ -1,6 +1,12 @@
 import * as types from './types';
 import {AsyncStorage, Alert} from 'react-native';
-import {signupUser, loginUser, updateUserInformation} from '../lib/api';
+import {
+  signupUser,
+  loginUser,
+  updateUserInformation,
+  loginFBUser,
+  verifyEmailExisting,
+} from '../lib/api';
 
 export const loggedInUser = () => {
   return dispatch => {
@@ -65,6 +71,24 @@ export const updateUserInfo = body => {
 export const authenticateUser = body => {
   return async dispatch => {
     const response = await loginUser(body);
+    //if authtoken is not null dispatch
+    if (response.error == null) {
+      await AsyncStorage.setItem('bboxAuthToken', response.authToken);
+      await AsyncStorage.setItem('bboxUserId', response.userId);
+      dispatch({
+        type: types.LANDING_PAGE,
+        payload: 'UserDashboard',
+      });
+    } else {
+      Alert.alert(response.error);
+      return;
+    }
+  };
+};
+
+export const authenticateFBUser = body => {
+  return async dispatch => {
+    const response = await loginFBUser(body);
     //if authtoken is not null dispatch
     if (response.error == null) {
       await AsyncStorage.setItem('bboxAuthToken', response.authToken);
