@@ -17,3 +17,4 @@ export const TUTOR_INFO = 'TUTOR_INFO';
 export const ME_INFO = 'ME_INFO';
 export const TUTOR_SCHEDULE = 'TUTOR_SCHEDULE';
 export const USER_INFO = 'USER_INFO';
+export const RESET = 'RESET';

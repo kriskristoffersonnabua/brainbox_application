@@ -26,9 +26,15 @@ import Dash from 'react-native-dash';
 import MapView, {Marker} from 'react-native-maps';
 import RNGooglePlaces from 'react-native-google-places';
 import Scheduler from './Scheduler';
+import {AccountType} from '../../../../lib/constants';
 import {getDates, generateBookedSchedules, generateLPR} from './controller';
 import Actions from '../../../../actions';
-const {createAppointmentAction, getUserInformation} = Actions;
+const {
+  getAllBookedAppointmentsFromTutorId,
+  getAllBookedAppointmentsFromClientId,
+  createAppointmentAction,
+  getUserInformation,
+} = Actions;
 import {connect} from 'react-redux';
 
 const Tutee = props => {
@@ -237,6 +243,7 @@ class TutorialBooking extends Component {
       .catch(error => console.log(error.message));
   }
   render() {
+    console.log(this.props);
     return (
       <ScrollView style={{flex: 1, backgroundColor: 'blue'}}>
         <View style={styles.container}>
@@ -535,7 +542,10 @@ class TutorialBooking extends Component {
             fontSize={11}
             style={{alignSelf: 'flex-start', marginBottom: 5}}
           />
-          <Subjects allSubjects={subjects => this.setState({subjects})} />
+          <Subjects
+            subjects={this.state.subjects}
+            allSubjects={subjects => this.setState({subjects})}
+          />
           <Dash
             style={{
               width: windowDimensions.width * 0.95,
@@ -750,7 +760,7 @@ class TutorialBooking extends Component {
     tutees.pop(index);
     this.setState({tutees});
   };
-  submitData = () => {
+  submitData = async () => {
     const {tutorId} = this.props;
     if (!(this.state.tutees.length > 0)) {
       Alert.alert('Please add a tutee.');
@@ -783,12 +793,22 @@ class TutorialBooking extends Component {
       };
 
       try {
-        this.props.createAppointmentAction(
+        await this.props.createAppointmentAction(
           appointmentData,
           bookedSchedules,
           generatedLPR,
-          '5b10f31621d211577ba1aaaa',
+          tutorId,
         );
+        Alert.alert('Tutorial has been booked.');
+        if (!!this.props.user) {
+          if ((this.props.user.accountType = AccountType.Client)) {
+            this.props.getAllBookedAppointmentsFromClientId(
+              this.props.user._id,
+            );
+          } else if ((this.props.user.accountType = AccountType.Tutor)) {
+            this.props.getAllBookedAppointmentsFromTutorId(this.props.user._id);
+          }
+        }
       } catch (exception) {
         console.log(exception);
       }
@@ -822,13 +842,22 @@ class TutorialBooking extends Component {
       };
 
       try {
-        this.props.createAppointmentAction(
+        await this.props.createAppointmentAction(
           appointmentData,
           bookedSchedules,
           generatedLPR,
           tutorId,
         );
-        //TODO: alert for succesfull creation
+        if (!!this.props.user) {
+          if ((this.props.user.accountType = AccountType.Client)) {
+            this.props.getAllBookedAppointmentsFromClientId(
+              this.props.user._id,
+            );
+          } else if ((this.props.user.accountType = AccountType.Tutor)) {
+            this.props.getAllBookedAppointmentsFromTutorId(this.props.user._id);
+          }
+        }
+        Alert.alert('Tutorial has been booked.');
         this.props.cancelTutorSelection();
       } catch (exception) {
         console.log(exception);
@@ -873,5 +902,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
   createAppointmentAction,
+  getAllBookedAppointmentsFromTutorId,
+  getAllBookedAppointmentsFromClientId,
   getUserInformation,
 })(TutorialBooking);
