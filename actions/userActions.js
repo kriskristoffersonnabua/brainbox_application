@@ -45,9 +45,9 @@ export const signupUserAction = body => {
 };
 
 export const signoutUser = () => {
-  return async dispatch => {
-    await AsyncStorage.removeItem('bboxAuthToken');
-    await AsyncStorage.removeItem('bboxUserId');
+  return dispatch => {
+    AsyncStorage.removeItem('bboxAuthToken');
+    AsyncStorage.removeItem('bboxUserId');
     dispatch({
       type: types.LANDING_PAGE,
       payload: 'Login',

@@ -78,7 +78,10 @@ class Header extends React.Component {
             onPress={this.props.goToAccountSettings}
           />
           <MenuItem text={'Help'} onPress={() => {}} />
-          <MenuItem text={'Logout'} onPress={this.props.signoutUser} />
+          <MenuItem
+            text={'Logout'}
+            onPress={async () => await this.props.signoutUser}
+          />
         </View>
       </View>
     );

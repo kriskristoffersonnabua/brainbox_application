@@ -130,10 +130,14 @@ class SearchTutor extends Component {
           <ScrollView style={{width: '100%', paddingTop: 10}}>
             {this.props.searchedTutors != undefined &&
               this.props.searchedTutors.map((tutor, index) => {
+                console.log(tutor);
                 return (
                   <TutorCard
                     key={index}
-                    tutorName="Kris Kristofferson"
+                    tutorName={
+                      (!!tutor && `${tutor.firstname} ${tutor.lastname}`) ||
+                      'tutor'
+                    }
                     available
                     onPress={() => this.props.setTutorId(tutor._id)}
                   />

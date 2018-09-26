@@ -27,20 +27,27 @@ export default (ButtonComponent = props => {
   return (
     <TouchableOpacity
       onPress={props.onPress || null}
-      style={[{
-        width,
-        height,
-        borderRadius: 25,
-        backgroundColor,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },props.style]}>
+      elevation={props.elevation}
+      style={[
+        {
+          width,
+          height,
+          borderRadius: 25,
+          backgroundColor,
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        props.style,
+      ]}>
       <Text
-        style={{
-          fontSize: props.fontSize || 18,
-          textAlign: 'center',
-          color: '#fafafa',
-        }}>
+        style={[
+          {
+            fontSize: props.fontSize || 18,
+            textAlign: 'center',
+            color: '#fafafa',
+          },
+          props.textStyle,
+        ]}>
         {props.text}
       </Text>
     </TouchableOpacity>

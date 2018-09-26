@@ -11,7 +11,9 @@ import MapView, {Marker} from 'react-native-maps';
 import Dash from 'react-native-dash';
 import {connect} from 'react-redux';
 import Actions from '../../../actions';
-const {getSelectedAppointment} = Actions;
+import SubmitFeedbackModal from './SubmitFeedbackModal';
+import LearnersProgressReport from './LPR';
+const {getSelectedAppointment, getUserInformation} = Actions;
 
 const Tutee = props => {
   return (
@@ -88,12 +90,14 @@ class BookedTutorial extends Component {
     super(props);
     this.state = {
       firstname: 'Kris Kristofferson',
+      openSubmitFeedbackModal: false,
       lastname: 'Nabua',
       address: 'V&G Subdivision, Blk. 2, Phase 4, Tacloban City, Leyte',
       addressObject: {},
       subjects: ['College Algebra', 'Science and Health'],
       scheduledBookings: [],
       progressReport: [],
+      isLPRModalVisible: false,
       tutees: [
         {
           firstname: 'Kris',
@@ -110,7 +114,7 @@ class BookedTutorial extends Component {
     this.props.getSelectedAppointment(this.props.appointmentId);
   }
   componentWillReceiveProps(nextProps) {
-    const {selectedAppointment} = nextProps;
+    const {selectedAppointment, loggedInUser: {accountType}} = nextProps;
     if (!!selectedAppointment && selectedAppointment !== null) {
       const {
         tutees,
@@ -130,18 +134,44 @@ class BookedTutorial extends Component {
         subjects,
         tutees,
         schedule,
+        accountType,
         progressReport,
         address: addressObject.address,
         addressObject,
       });
     }
   }
+  _toggleFeedbackModal = () => {
+    this.setState({
+      openSubmitFeedbackModal: !this.state.openSubmitFeedbackModal,
+    });
+  };
+  toggleLPRModal = () => {
+    this.setState(prevState => ({
+      isLPRModalVisible: !prevState.isLPRModalVisible,
+    }));
+  };
+  toggleFeedbackModal = () => {
+    this.setState(prevState => ({
+      openSubmitFeedbackModal: !prevState.openSubmitFeedbackModal,
+    }));
+  };
   render() {
     return (
       <ScrollView
         style={{
           width: '100%',
         }}>
+        <SubmitFeedbackModal
+          cancelFeedbackModal={() => {}}
+          toggleFeedbackModal={this._toggleFeedbackModal}
+          feedbackModal={this.state.openSubmitFeedbackModal}
+        />
+        <LearnersProgressReport
+          isVisible={this.state.isLPRModalVisible}
+          toggleLPRModal={this.toggleLPRModal}
+          progressReport={this.state.progressReport}
+        />
         <View style={styles.container}>
           <View
             style={{
@@ -173,22 +203,27 @@ class BookedTutorial extends Component {
             dashThickness={1}
             dashColor={'#979797'}
           />
-          <Button
-            style={{marginBottom: 10}}
-            fontSize={12}
-            text={'Learners Progress Report'}
-            type="cancel"
-            width={204}
-            height={34}
-          />
-          <Button
-            style={{marginBottom: 10}}
-            fontSize={12}
-            text={'Submit Feedback'}
-            type="confirm"
-            width={204}
-            height={34}
-          />
+          {!!this.state.accountType && this.state.accountType === 1 ? (
+            <Button
+              style={{marginBottom: 10}}
+              fontSize={12}
+              text={'Learners Progress Report'}
+              onPress={this.toggleLPRModal}
+              type="cancel"
+              width={204}
+              height={34}
+            />
+          ) : (
+            <Button
+              style={{marginBottom: 10}}
+              fontSize={12}
+              text={'Submit Feedback'}
+              onPress={this.toggleFeedbackModal}
+              type="confirm"
+              width={204}
+              height={34}
+            />
+          )}
           <Dash
             style={{width: '100%', height: 2, marginBottom: 10}}
             dashLength={4}
@@ -296,7 +331,6 @@ class BookedTutorial extends Component {
                 let date = report.date;
                 let duration = report.duration;
                 let start = report.time_start;
-                console.log(report);
                 return (
                   <ScheduledBooking
                     date={date}
@@ -324,6 +358,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     selectedAppointment: state.ResourcesReducer.selectedAppointment,
+    loggedInUser: state.ResourcesReducer.user,
   };
 };
 
